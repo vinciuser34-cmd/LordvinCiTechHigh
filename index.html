@@ -1,0 +1,2276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="description" content="LordvinCiTech High — the complete underground coding academy. JavaScript, Python, R, Termux, Linux, Ubuntu, Bots, APIs.">
+<title>LordvinCiTech High</title>
+
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LVT High">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="LVT High">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#050810;--bg2:#0a0e1a;--panel:#0f1424;--panel2:#151b30;
+  --accent:#00ff9d;--accent2:#00c8ff;--danger:#ff2e63;--warn:#ffb800;
+  --txt:#d7e2f0;--dim:#7a8699;--border:#1e2740;
+  --js:#f7df1e;--py:#3776ab;--r:#276dc3;--tmux:#00d4aa;--lin:#f8b800;
+  --ubu:#e95420;--bot:#5865f2;--api:#8b5cf6;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--txt);overflow-x:hidden;line-height:1.55;
+  min-height:100vh;
+}
+body.locked{overflow:hidden}
+body.pwa-mode #installBtn{display:none!important}
+::selection{background:var(--accent);color:#000}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--accent),var(--accent2));border-radius:5px}
+.hidden{display:none!important}
+
+/* ===== OFFLINE ===== */
+#offline{position:fixed;inset:0;z-index:99999;background:radial-gradient(circle at 50% 40%,#0d1424,#050810);
+  display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:16px}
+#offline.show{display:flex;animation:fadeIn .4s}
+#offline .sk{font-size:80px;filter:drop-shadow(0 0 20px var(--danger));animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08);opacity:.75}}
+#offline h1{color:var(--danger);font-size:clamp(22px,5vw,34px);letter-spacing:1px}
+#offline p{color:var(--dim);max-width:440px}
+#offline .box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px 18px;
+  font-size:14px;max-width:440px;text-align:left}
+#offline .box b{color:var(--accent)}
+#offline button{margin-top:8px;padding:12px 26px;border-radius:30px;border:none;cursor:pointer;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001;font-weight:700;font-size:15px}
+#offline button:active{transform:scale(.96)}
+
+/* ===== NAVBAR ===== */
+#nav{
+  position:fixed;top:0;left:0;right:0;height:64px;z-index:1000;
+  background:rgba(5,8,16,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 14px;
+}
+#nav .left{display:flex;align-items:center;gap:10px}
+#menuBtn{
+  width:44px;height:44px;border-radius:12px;background:rgba(15,20,36,.9);
+  border:1px solid var(--border);cursor:pointer;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;gap:5px;transition:.3s;
+}
+#menuBtn:hover{border-color:var(--accent);box-shadow:0 0 12px rgba(0,255,157,.4)}
+#menuBtn span{display:block;width:22px;height:2.5px;border-radius:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.35s cubic-bezier(.68,-.55,.27,1.55)}
+#menuBtn.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+#menuBtn.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+#menuBtn.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+#nav .brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;cursor:pointer}
+#nav .brand .sk{font-size:22px;filter:drop-shadow(0 0 8px var(--accent))}
+#nav .brand b{font-size:15px;letter-spacing:.5px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+#nav .brand small{font-size:10px;color:var(--dim);display:block;letter-spacing:1px}
+#nav .right{display:flex;gap:8px;align-items:center}
+#nav .right button{padding:8px 14px;border-radius:10px;border:1px solid var(--border);
+  cursor:pointer;background:rgba(15,20,36,.85);color:var(--txt);font-size:13px;transition:.25s;font-family:inherit}
+#nav .right button:hover{border-color:var(--accent);color:var(--accent)}
+#nav .right .primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001;border:none;font-weight:700}
+#nav .user-pill{padding:6px 12px;border-radius:20px;background:rgba(0,255,157,.1);
+  border:1px solid rgba(0,255,157,.35);color:var(--accent);font-size:12.5px;font-weight:600;
+  display:flex;align-items:center;gap:6px}
+#nav .user-pill button{background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px;padding:0}
+
+/* Flame animation */
+#flames{position:fixed;top:0;left:0;right:0;height:64px;z-index:999;pointer-events:none;overflow:hidden}
+.flame{position:absolute;bottom:-10px;width:14px;height:14px;border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,var(--accent) 30%,transparent 70%);
+  opacity:.7;animation:rise linear infinite}
+@keyframes rise{0%{transform:translateY(0) scale(.4);opacity:.9}
+  100%{transform:translateY(-70px) scale(1.3);opacity:0}}
+
+/* ===== SIDEBAR ===== */
+#backdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  z-index:1050;opacity:0;pointer-events:none;transition:.35s}
+#backdrop.show{opacity:1;pointer-events:auto}
+#sidebar{
+  position:fixed;top:0;left:-320px;width:300px;height:100%;z-index:1100;
+  background:linear-gradient(180deg,rgba(8,12,22,.99),rgba(15,20,36,.99));
+  border-right:1px solid var(--border);
+  transition:left .45s cubic-bezier(.68,-.4,.27,1.2);
+  display:flex;flex-direction:column;overflow-y:auto;padding:78px 0 30px;
+  box-shadow:20px 0 60px rgba(0,0,0,.7);
+}
+#sidebar.open{left:0}
+#sidebar h2{padding:0 20px 12px;font-size:13px;color:var(--accent);letter-spacing:2px;
+  text-transform:uppercase;border-bottom:1px solid var(--border);margin-bottom:10px;
+  display:flex;align-items:center;justify-content:space-between}
+#sidebar h2 .x{background:none;border:none;color:var(--danger);cursor:pointer;font-size:16px;padding:4px 8px;border-radius:6px}
+#sidebar h2 .x:hover{background:rgba(255,46,99,.15)}
+.nav-item{padding:12px 20px;color:var(--txt);cursor:pointer;font-size:14px;
+  border-left:3px solid transparent;transition:.25s;display:flex;align-items:center;gap:12px;
+  position:relative;overflow:hidden}
+.nav-item::before{content:'';position:absolute;left:0;top:0;height:100%;width:0;
+  background:linear-gradient(90deg,rgba(0,255,157,.15),transparent);transition:.3s}
+.nav-item:hover::before,.nav-item.active::before{width:100%}
+.nav-item:hover,.nav-item.active{color:var(--accent);border-left-color:var(--accent)}
+.nav-item .ico{width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-item .ico svg{width:20px;height:20px}
+.nav-sep{height:1px;background:var(--border);margin:8px 18px}
+
+/* ===== MAIN ===== */
+#main{padding:80px 16px 40px;max-width:1100px;margin:0 auto;min-height:100vh}
+.section{display:none;animation:fadeIn .4s}
+.section.active{display:block}
+.section h2{font-size:26px;margin-bottom:6px;color:var(--accent);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.section h2 .badge{font-size:11px;padding:3px 10px;border-radius:20px;
+  background:var(--panel);border:1px solid var(--border);color:var(--dim);font-weight:400}
+.section .lead{color:var(--dim);margin-bottom:22px;font-size:14.5px}
+.section[class*="section"] h2 .dot{width:12px;height:12px;border-radius:50%;
+  background:var(--themec,var(--accent));box-shadow:0 0 12px var(--themec,var(--accent))}
+
+#javascript{--themec:var(--js)}
+#python{--themec:var(--py)}
+#r{--themec:var(--r)}
+#termux{--themec:var(--tmux)}
+#linux{--themec:var(--lin)}
+#ubuntu{--themec:var(--ubu)}
+#bots{--themec:var(--bot)}
+#apis{--themec:var(--api)}
+#terminal{--themec:var(--accent)}
+
+.section-wrap{
+  background:
+    radial-gradient(circle at 10% 0%,var(--themec,var(--accent)) 0%,transparent 45%),
+    radial-gradient(circle at 90% 100%,var(--themec,var(--accent)) 0%,transparent 45%);
+  background-blend-mode:soft-light;
+  border-radius:18px;padding:22px;border:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.section-wrap::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.25));pointer-events:none}
+
+/* ===== CARDS ===== */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  padding:18px;margin-bottom:16px;transition:.3s;position:relative;z-index:1}
+.card:hover{border-color:var(--accent);box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.card h3{font-size:16.5px;margin-bottom:10px;color:var(--accent);
+  display:flex;align-items:center;gap:8px}
+.card h4{font-size:14px;margin:14px 0 8px;color:var(--accent)}
+.card p{font-size:14px;color:var(--txt);margin-bottom:8px}
+.card ul{padding-left:20px;font-size:13.5px}
+.card ul li{margin:5px 0}
+.card ul li code{color:var(--accent2)}
+.card ol{padding-left:20px;font-size:13.5px}
+.card ol li{margin:6px 0}
+code{font-family:'Fira Code',Consolas,monospace;background:#070a12;border:1px solid var(--border);
+  padding:2px 7px;border-radius:6px;font-size:12.5px;color:var(--accent);word-break:break-word}
+pre{background:#070a12;border:1px solid var(--border);border-radius:10px;padding:14px;
+  overflow-x:auto;margin:10px 0;font-size:12.5px;line-height:1.7;position:relative}
+pre code{background:none;border:none;padding:0;color:#9ee8c9}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+th,td{padding:8px 10px;border:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:var(--panel2);color:var(--accent);font-size:12px;letter-spacing:.5px}
+tr:hover td{background:rgba(0,255,157,.04)}
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;
+  background:rgba(0,255,157,.12);border:1px solid rgba(0,255,157,.3);color:var(--accent);margin:2px 3px}
+.btn-outline{background:var(--panel);border:1px solid var(--border);color:var(--txt);
+  padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;transition:.25s}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-fill{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001;border:none;
+  padding:10px 18px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit;transition:.25s}
+.btn-fill:hover{filter:brightness(1.1)}
+a.link{color:var(--accent2);text-decoration:none}
+a.link:hover{text-decoration:underline}
+
+/* Steps */
+.steps{background:#070a12;border:1px solid var(--border);border-radius:10px;padding:14px;margin:10px 0}
+.step{display:flex;gap:10px;padding:7px 0;align-items:flex-start;border-bottom:1px dashed rgba(255,255,255,.05)}
+.step:last-child{border-bottom:none}
+.step .n{width:22px;height:22px;border-radius:50%;
+  background:rgba(0,255,157,.15);
+  border:1px solid var(--accent);color:var(--accent);display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.step .cmd{flex:1;font-family:'Fira Code',monospace;font-size:12.5px;color:#9ee8c9;word-break:break-all}
+.step .cmd b{color:var(--accent);font-weight:400}
+.step .copy-s{background:rgba(0,255,157,.1);border:1px solid rgba(0,255,157,.3);color:var(--accent);
+  font-size:10px;padding:2px 7px;border-radius:5px;cursor:pointer;font-family:inherit;flex-shrink:0}
+
+/* Editor */
+.editor{background:#04070c;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:12px 0}
+.editor .bar{background:var(--panel2);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);font-size:11.5px;color:var(--dim)}
+.editor .bar .dots{display:flex;gap:5px}
+.editor .bar .dots i{width:10px;height:10px;border-radius:50%;display:block}
+.editor .bar .dots i:nth-child(1){background:#ff5f56}
+.editor .bar .dots i:nth-child(2){background:#ffbd2e}
+.editor .bar .dots i:nth-child(3){background:#27c93f}
+.editor textarea{width:100%;min-height:150px;background:#04070c;border:none;color:#9ee8c9;
+  font-family:'Fira Code',Consolas,monospace;font-size:13px;padding:12px;outline:none;resize:vertical;line-height:1.6}
+.editor .actions{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
+.editor .actions button{padding:7px 14px;border-radius:7px;cursor:pointer;font-size:12.5px;
+  border:1px solid var(--border);background:var(--panel);color:var(--txt);font-family:inherit}
+.editor .actions button:hover{border-color:var(--accent)}
+.editor .actions .run{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001;border:none;font-weight:700}
+.editor .out{background:#020604;border-top:1px solid var(--border);padding:12px;
+  font-family:'Fira Code',monospace;font-size:12.5px;color:var(--accent);min-height:44px;
+  white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto}
+
+/* ===== MODAL ===== */
+#modalOverlay{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.65);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  padding:16px;perspective:1400px}
+#modalOverlay.show{display:flex;animation:fadeIn .3s}
+.modal{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--border);
+  border-radius:18px;padding:26px 22px;position:relative;transform-origin:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.modal.shatter-in{animation:shatterIn .55s cubic-bezier(.2,.9,.3,1.4) forwards}
+.modal.shatter-out{animation:shatterOut .45s cubic-bezier(.7,-.3,.3,1) forwards}
+@keyframes shatterIn{0%{opacity:0;transform:scale(1.3) rotateX(30deg);filter:blur(12px)}
+  40%{opacity:1;transform:scale(.96) rotateX(-4deg);filter:blur(2px)}
+  70%{transform:scale(1.02) rotateX(2deg)}100%{opacity:1;transform:scale(1) rotateX(0);filter:blur(0)}}
+@keyframes shatterOut{0%{opacity:1;transform:scale(1) rotateX(0);filter:blur(0)}
+  40%{transform:scale(1.08) rotateX(-6deg);filter:blur(3px);opacity:.85}
+  100%{opacity:0;transform:scale(1.35) rotateX(25deg);filter:blur(16px)}}
+.shards{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.shard{position:absolute;background:linear-gradient(135deg,rgba(0,255,157,.35),rgba(0,200,255,.15));
+  border:1px solid rgba(0,255,157,.5);opacity:0;clip-path:polygon(0 0,100% 20%,80% 100%)}
+.modal.shatter-in .shard,.modal.shatter-out .shard{animation:shardFly .7s ease-out forwards}
+@keyframes shardFly{0%{opacity:.9;transform:translate(0,0) rotate(0)}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) rotate(var(--rot))}}
+.modal h2{color:var(--accent);margin-bottom:6px;font-size:20px;text-align:center}
+.modal .sub{color:var(--dim);font-size:13px;text-align:center;margin-bottom:18px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12.5px;color:var(--dim);margin-bottom:5px}
+.field input{width:100%;padding:11px 13px;background:#070a12;border:1px solid var(--border);
+  border-radius:10px;color:var(--txt);font-size:14px;outline:none;transition:.25s;font-family:inherit}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,157,.12)}
+.field input::placeholder{color:#3d475c}
+.modal .btn{width:100%;padding:12px;border-radius:10px;border:none;cursor:pointer;font-size:14.5px;
+  font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001;margin-top:6px;font-family:inherit}
+.modal .btn:hover{filter:brightness(1.1)}
+.modal .switch{text-align:center;margin-top:14px;font-size:13px;color:var(--dim)}
+.modal .switch a{color:var(--accent);cursor:pointer;text-decoration:none;font-weight:600}
+.modal .close{position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;font-size:16px}
+.modal .close:hover{color:var(--danger);border-color:var(--danger);transform:rotate(90deg)}
+.pin-row{display:flex;gap:10px;justify-content:center;margin:14px 0}
+.pin-row input{width:48px;height:56px;text-align:center;font-size:22px;font-weight:700;
+  background:#070a12;border:2px solid var(--border);border-radius:12px;color:var(--accent);
+  outline:none;transition:.25s;font-family:'Fira Code',monospace;padding:0}
+.pin-row input:focus{border-color:var(--accent);box-shadow:0 0 12px rgba(0,255,157,.4);transform:scale(1.05)}
+
+/* ===== CALCULATOR ===== */
+#calcGate{position:fixed;inset:0;z-index:2500;display:none;background:radial-gradient(circle at 50% 30%,#0a1420,#03060c);
+  padding:16px;overflow-y:auto}
+#calcGate.show{display:flex;align-items:center;justify-content:center;animation:fadeIn .4s}
+.calc{width:100%;max-width:420px;background:#050a10;border:1px solid var(--accent);
+  border-radius:22px;padding:18px;box-shadow:0 0 50px rgba(0,255,157,.35),inset 0 0 50px rgba(0,255,157,.05);
+  position:relative;overflow:hidden}
+.calc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scan 2.4s linear infinite}
+@keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.calc .scr{background:#020604;border:1px solid rgba(0,255,157,.3);border-radius:14px;
+  padding:16px;margin-bottom:12px;font-family:'Fira Code',monospace}
+.calc .scr .status{font-size:11px;color:var(--accent);letter-spacing:1px;display:flex;justify-content:space-between}
+.calc .scr .out{font-size:30px;color:var(--accent);text-align:right;margin-top:10px;
+  word-break:break-all;min-height:40px;letter-spacing:6px}
+.calc .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.calc .keys button{padding:18px 0;font-size:18px;font-weight:700;border-radius:12px;cursor:pointer;
+  background:#0b1420;border:1px solid var(--border);color:var(--accent);transition:.15s;font-family:'Fira Code',monospace}
+.calc .keys button:hover{background:#122030;border-color:var(--accent);box-shadow:0 0 12px rgba(0,255,157,.3)}
+.calc .keys button:active{transform:scale(.94)}
+.calc .keys .op{color:var(--accent2);border-color:rgba(0,200,255,.3)}
+.calc .keys .eq{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001;grid-column:span 3;font-size:15px}
+.calc .note{margin-top:14px;font-size:11.5px;color:var(--dim);text-align:center;line-height:1.5}
+.calc .note b{color:var(--warn)}
+
+/* ===== CAPTCHA ===== */
+#captcha{position:fixed;inset:0;z-index:2600;display:none;background:radial-gradient(circle at 50% 30%,#0a1420,#03060c);
+  align-items:center;justify-content:center;padding:16px}
+#captcha.show{display:flex;animation:fadeIn .4s}
+.cap{width:100%;max-width:440px;background:var(--panel);border:1px solid var(--accent);
+  border-radius:18px;padding:24px;box-shadow:0 0 50px rgba(0,255,157,.3)}
+.cap h2{color:var(--accent);font-size:19px;margin-bottom:6px;text-align:center}
+.cap p.sub{color:var(--dim);font-size:13px;text-align:center;margin-bottom:18px}
+.cap .box{background:#04070c;border:1px dashed var(--accent);border-radius:12px;padding:16px;
+  text-align:center;margin-bottom:14px;font-family:'Fira Code',monospace}
+.cap .box .code{font-size:26px;color:var(--accent);letter-spacing:6px;font-weight:700;
+  text-shadow:0 0 12px rgba(0,255,157,.5);user-select:none;-webkit-user-select:none}
+.cap .box .refresh{font-size:11px;color:var(--dim);margin-top:8px;cursor:pointer}
+.cap .box .refresh:hover{color:var(--accent)}
+.cap input{width:100%;padding:14px;background:#070a12;border:2px solid var(--border);border-radius:10px;
+  color:var(--accent);font-family:'Fira Code',monospace;font-size:18px;letter-spacing:4px;text-align:center;outline:none}
+.cap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,157,.15)}
+.cap .btn{width:100%;padding:13px;border-radius:10px;border:none;cursor:pointer;margin-top:14px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));color:#001;font-weight:700;font-family:inherit;font-size:14px}
+.cap .tries{text-align:center;margin-top:10px;font-size:12px;color:var(--dim)}
+.cap .tries b{color:var(--warn)}
+
+/* ===== TERMINAL ===== */
+#term-box{background:#04070c;border:1px solid var(--border);border-radius:12px;padding:14px;
+  font-family:'Fira Code',Consolas,monospace;font-size:13px;height:360px;overflow-y:auto;color:#9ee8c9}
+#term-box .line{margin:3px 0;white-space:pre-wrap;word-break:break-word}
+#term-box .prompt{color:var(--accent)}
+#term-box .err{color:var(--danger)}
+#term-box .sys{color:var(--warn)}
+.term-row{display:flex;gap:8px;margin-top:10px;align-items:center}
+.term-row span{color:var(--accent);font-family:'Fira Code',monospace;font-size:14px}
+.term-row input{flex:1;padding:12px;background:#04070c;border:1px solid var(--border);border-radius:10px;
+  color:var(--accent);font-family:'Fira Code',monospace;font-size:14px;outline:none}
+.term-row input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,157,.1)}
+
+/* ===== API ROW ===== */
+.api-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;
+  border-bottom:1px solid var(--border);font-size:13px;flex-wrap:wrap}
+.api-row:last-child{border-bottom:none}
+.api-row .name{font-weight:600;color:var(--txt);flex:1;min-width:120px}
+.api-row .url{font-family:'Fira Code',monospace;font-size:11.5px;color:var(--accent2);flex:2;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.api-row .cp{padding:4px 10px;border-radius:6px;font-size:11px;background:rgba(0,255,157,.12);
+  border:1px solid rgba(0,255,157,.35);color:var(--accent);cursor:pointer;font-family:inherit}
+
+/* ===== CONTACT ===== */
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.contact-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;
+  text-decoration:none;color:var(--txt);background:var(--panel2);border:1px solid var(--border);transition:.3s;font-size:13.5px}
+.contact-btn:hover{transform:translateY(-2px);border-color:var(--accent)}
+.contact-btn .ci{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:#fff;font-weight:700;font-size:16px}
+.contact-btn .ci svg{width:18px;height:18px;fill:#fff}
+.ci.wa{background:#25d366}
+.ci.tel{background:#1abcfe}
+.ci.mail{background:#ea4335}
+
+/* ===== INSTALL BUTTON ===== */
+#installBtn{position:fixed;bottom:20px;right:20px;z-index:1500;
+  width:64px;height:64px;border-radius:50%;border:2px solid var(--accent);cursor:pointer;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#001;display:none;align-items:center;justify-content:center;
+  box-shadow:0 8px 30px rgba(0,255,157,.6);animation:float 2.4s ease-in-out infinite}
+#installBtn.show{display:flex}
+#installBtn svg{width:28px;height:28px;fill:#001}
+#installBtn::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--accent);
+  opacity:0;animation:ring 2s ease-out infinite;pointer-events:none}
+@keyframes ring{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.4);opacity:0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#installBtn:active{transform:scale(.9)}
+
+/* ===== FOOTER ===== */
+footer{background:linear-gradient(180deg,transparent,#070a12);border-top:1px solid var(--border);
+  margin-top:60px;position:relative;overflow:hidden}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.foot-top{max-width:1100px;margin:0 auto;padding:50px 20px 30px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px}
+.foot-brand .sk{font-size:44px;filter:drop-shadow(0 0 16px var(--accent));margin-bottom:8px}
+.foot-brand b{font-size:20px;display:block;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.foot-brand p{color:var(--dim);font-size:13px;margin-top:10px;max-width:280px;line-height:1.7}
+.foot-col h4{color:var(--accent);font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.foot-col a{display:block;color:var(--dim);font-size:13.5px;margin:8px 0;text-decoration:none;
+  transition:.25s;cursor:pointer}
+.foot-col a:hover{color:var(--accent);transform:translateX(5px)}
+.socials{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.socials a{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:var(--panel);border:1px solid var(--border);color:var(--txt);text-decoration:none;
+  transition:.3s}
+.socials a svg{width:20px;height:20px;fill:currentColor}
+.socials a:hover{transform:translateY(-4px);border-color:var(--accent);color:var(--accent);
+  box-shadow:0 8px 20px rgba(0,255,157,.25)}
+.foot-news{max-width:1100px;margin:0 auto;padding:0 20px 30px}
+.foot-news .news{background:var(--panel);border:1px solid var(--border);border-radius:14px;
+  padding:18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.foot-news .news p{color:var(--dim);font-size:13px;flex:1;min-width:200px}
+.foot-news .news b{color:var(--accent);display:block;font-size:14px;margin-bottom:2px}
+.foot-news .news input{flex:1;min-width:180px;padding:11px 14px;border-radius:10px;
+  background:#070a12;border:1px solid var(--border);color:var(--txt);outline:none;font-family:inherit;font-size:13px}
+.foot-news .news input:focus{border-color:var(--accent)}
+.foot-bottom{border-top:1px solid var(--border);padding:20px;text-align:center;color:var(--dim);font-size:12.5px;
+  background:rgba(0,0,0,.3)}
+.foot-bottom b{color:var(--accent)}
+.foot-bottom .flex{display:flex;justify-content:center;gap:16px;margin-top:8px;flex-wrap:wrap}
+.foot-bottom a{color:var(--dim);text-decoration:none;cursor:pointer}
+.foot-bottom a:hover{color:var(--accent)}
+
+/* ===== MISC ===== */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--panel);border:1px solid var(--accent);color:var(--txt);padding:12px 22px;
+  border-radius:30px;font-size:13.5px;z-index:5000;opacity:0;transition:.35s;pointer-events:none;
+  box-shadow:0 0 20px rgba(0,255,157,.4);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:640px){
+  #main{padding:76px 12px 30px}
+  #nav .brand small{display:none}
+  #nav .brand b{font-size:13px}
+  .section h2{font-size:21px}
+  .card{padding:14px}
+  .section-wrap{padding:14px}
+  .api-row{flex-direction:column;align-items:flex-start}
+  .api-row .url{white-space:normal;word-break:break-all;width:100%}
+}
+</style>
+</head>
+<body>
+
+<div id="offline">
+  <div class="sk">💀</div>
+  <h1>NO CONNECTION</h1>
+  <p>LordvinCiTech High needs an internet connection to load.</p>
+  <div class="box">
+    <b>Try:</b><br>
+    • Check Wi-Fi or mobile data<br>
+    • Open <b>Settings → Network</b><br>
+    • Move closer to your router<br>
+    • Tap below to refresh
+  </div>
+  <button onclick="location.reload()">🔄 Refresh Connection</button>
+</div>
+
+<div id="flames"></div>
+
+<nav id="nav">
+  <div class="left">
+    <button id="menuBtn" aria-label="Menu" onclick="toggleSidebar(event)">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="brand" onclick="showSection('home')">
+      <span class="sk">💀</span>
+      <span><b>LordvinCiTech</b><small>HIGH ACADEMY</small></span>
+    </div>
+  </div>
+  <div class="right" id="navAuth">
+    <button onclick="openModal('login')">Login</button>
+    <button class="primary" onclick="openModal('signup')">Sign Up</button>
+  </div>
+</nav>
+
+<div id="backdrop" onclick="closeSidebar()"></div>
+
+<aside id="sidebar">
+  <h2>💀 Menu <button class="x" onclick="closeSidebar()">✕</button></h2>
+
+  <div class="nav-item active" data-sec="home" onclick="showSection('home')">
+    <span class="ico">🏛️</span>Home</div>
+  <div class="nav-sep"></div>
+
+  <div class="nav-item" data-sec="javascript" onclick="showSection('javascript')">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="3" fill="#f7df1e"/><path d="M6 18c0 .6.5 1 1.2 1h2c.7 0 1.2-.4 1.2-1v-6h-1.7v5.5H7v-5.5H5.5v6H6zm6.5-6.5V13h1.7v3.5c0 .5.3.9.8.9.4 0 .7-.3.7-.8V13h1.7v3.7c0 1.5-.9 2.3-2.4 2.3-1.4 0-2.4-.8-2.4-2.2V11.5h1.9z" fill="#000"/></svg>
+    </span>JavaScript</div>
+
+  <div class="nav-item" data-sec="python" onclick="showSection('python')">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.9 1.5c-5 0-4.7 2.2-4.7 2.2v2.3h4.8v.7H4.6S1 6.3 1 11.7s3.1 5.2 3.1 5.2h1.9v-2.5s-.1-3.1 3-3.1h5.2s2.9.05 2.9-2.8V4.3s.4-2.8-4.2-2.8zm-2.6 1.5c.5 0 .9.4.9.9s-.4.9-.9.9-.9-.4-.9-.9.4-.9.9-.9z" fill="#3776ab"/><path d="M12.1 22.5c5 0 4.7-2.2 4.7-2.2v-2.3h-4.8v-.7h7.4S23 17.7 23 12.3s-3.1-5.2-3.1-5.2h-1.9v2.5s.1 3.1-3 3.1h-5.2s-2.9-.05-2.9 2.8v4.2s-.4 2.8 4.2 2.8zm2.6-1.5c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9z" fill="#ffd43b"/></svg>
+    </span>Python</div>
+
+  <div class="nav-item" data-sec="r" onclick="showSection('r')">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#276dc3"/><text x="12" y="17" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="Arial">R</text></svg>
+    </span>R Language</div>
+
+  <div class="nav-item" data-sec="termux" onclick="showSection('termux')">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="18" rx="2" fill="#00d4aa"/><path d="M6 8l3 3-3 3M11 14h5" stroke="#001" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+    </span>Termux</div>
+
+  <div class="nav-item" data-sec="linux" onclick="showSection('linux')">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c-2 0-3.5 1.5-3.5 4 0 1.5-.5 2.5-1.5 3.5C5 11 4 13 4 15c0 3 2.5 6 8 6s8-3 8-6c0-2-1-4-3-5.5-1-1-1.5-2-1.5-3.5 0-2.5-1.5-4-3.5-4z" fill="#f8b800"/><circle cx="10" cy="10" r="0.8" fill="#000"/><circle cx="14" cy="10" r="0.8" fill="#000"/><path d="M9 15c1 1 3 1 6 0" stroke="#000" stroke-width="1" fill="none"/></svg>
+    </span>Linux</div>
+
+  <div class="nav-item" data-sec="ubuntu" onclick="showSection('ubuntu')">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#e95420"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="4" r="1.5" fill="#fff"/><circle cx="18.9" cy="16" r="1.5" fill="#fff"/><circle cx="5.1" cy="16" r="1.5" fill="#fff"/><path d="M12 5.5v3M18 15.2l-2.6-1.5M6 15.2l2.6-1.5" stroke="#fff" stroke-width="1.2"/></svg>
+    </span>Ubuntu</div>
+
+  <div class="nav-sep"></div>
+
+  <div class="nav-item" data-sec="bots" onclick="showSection('bots')">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3" fill="#5865f2"/><circle cx="9" cy="12" r="1.5" fill="#fff"/><circle cx="15" cy="12" r="1.5" fill="#fff"/><rect x="11" y="3" width="2" height="4" fill="#5865f2"/><circle cx="12" cy="3" r="1.5" fill="#5865f2"/><path d="M9 16h6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </span>Bot Creation</div>
+
+  <div class="nav-item" data-sec="apis" onclick="showSection('apis')">
+    <span class="ico">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3" fill="none" stroke="#8b5cf6" stroke-width="2"/><path d="M6 9h4M6 13h8M6 17h5" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="10" r="1.5" fill="#8b5cf6"/><circle cx="18" cy="16" r="1.5" fill="#8b5cf6"/></svg>
+    </span>APIs</div>
+
+  <div class="nav-sep"></div>
+
+  <div class="nav-item" data-sec="terminal" onclick="showSection('terminal')">
+    <span class="ico">⌨️</span>Live Terminal</div>
+  <div class="nav-item" data-sec="support" onclick="showSection('support')">
+    <span class="ico">💬</span>Support</div>
+</aside>
+
+<main id="main">
+
+<section class="section active" id="home">
+  <div style="text-align:center;padding:20px 10px 40px" class="fade-in">
+    <div style="font-size:90px;filter:drop-shadow(0 0 30px var(--accent));animation:float 3s ease-in-out infinite">💀</div>
+    <h1 style="font-size:clamp(28px,6vw,52px);margin:12px 0;letter-spacing:1px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2),#b537ff);
+      -webkit-background-clip:text;background-clip:text;color:transparent">LordvinCiTech High</h1>
+    <p style="color:var(--dim);max-width:600px;margin:0 auto;font-size:15px">
+      The complete underground academy. Learn JavaScript, Python, R, Termux, Linux, Ubuntu, Bot Creation, and API Mastery — from zero to legend.
+    </p>
+    <div style="margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-fill" onclick="showSection('javascript')">Start Learning →</button>
+      <button class="btn-outline" onclick="showSection('terminal')">Open Terminal</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 What You'll Master</h3>
+    <p>Each module is built hands-on — theory + live code editor + real-world money angles + phone + laptop workflows.</p>
+    <div>
+      <span class="tag">JavaScript</span><span class="tag">Python</span><span class="tag">R</span>
+      <span class="tag">Termux</span><span class="tag">Linux</span><span class="tag">Ubuntu</span>
+      <span class="tag">Bots</span><span class="tag">APIs</span><span class="tag">Git</span>
+      <span class="tag">Bash</span><span class="tag">Vim</span><span class="tag">Nano</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🚀 Quick Start</h3>
+    <ul>
+      <li>Tap ☰ to open the menu and pick any module</li>
+      <li>Sign up to unlock the PIN gate + captcha security chain</li>
+      <li>Each module has its own live code editor — write and run code</li>
+      <li>Tap the floating ⬇ button to install as an app</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="javascript">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>JavaScript <span class="badge">Full Course</span></h2>
+    <p class="lead">Everything from variables to async — with a live JS runner below.</p>
+
+    <div class="card">
+      <h3>📚 1. Basics — Variables &amp; Types</h3>
+      <pre><code>let name = "LordvinCi";
+const PI = 3.14159;
+var old = "avoid this";
+
+typeof "hello"     // "string"
+typeof 42          // "number"
+typeof true        // "boolean"
+typeof undefined   // "undefined"
+typeof null        // "object" (historical bug)
+typeof {}          // "object"
+typeof Symbol()    // "symbol"
+typeof 10n         // "bigint"</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 2. All String Methods</h3>
+      <table>
+        <tr><th>Method</th><th>What it does</th><th>Example → Result</th></tr>
+        <tr><td><code>length</code></td><td>Character count</td><td><code>"abc".length</code> → 3</td></tr>
+        <tr><td><code>charAt(i)</code></td><td>Char at index</td><td><code>"abc".charAt(1)</code> → "b"</td></tr>
+        <tr><td><code>at(i)</code></td><td>Char (supports negatives)</td><td><code>"abc".at(-1)</code> → "c"</td></tr>
+        <tr><td><code>includes(s)</code></td><td>Contains substring</td><td><code>"hello".includes("ell")</code> → true</td></tr>
+        <tr><td><code>startsWith(s)</code></td><td>Begins with</td><td><code>"hello".startsWith("he")</code> → true</td></tr>
+        <tr><td><code>endsWith(s)</code></td><td>Ends with</td><td><code>"hello".endsWith("lo")</code> → true</td></tr>
+        <tr><td><code>indexOf(s)</code></td><td>First index (or -1)</td><td><code>"a-b-c".indexOf("-")</code> → 1</td></tr>
+        <tr><td><code>lastIndexOf(s)</code></td><td>Last index (or -1)</td><td><code>"a-b-c".lastIndexOf("-")</code> → 3</td></tr>
+        <tr><td><code>slice(a,b)</code></td><td>Extract substring</td><td><code>"hello".slice(1,4)</code> → "ell"</td></tr>
+        <tr><td><code>substring(a,b)</code></td><td>Extract (no negatives)</td><td><code>"hello".substring(1,4)</code> → "ell"</td></tr>
+        <tr><td><code>replace(a,b)</code></td><td>Replace first</td><td><code>"aa".replace("a","b")</code> → "ba"</td></tr>
+        <tr><td><code>replaceAll(a,b)</code></td><td>Replace all</td><td><code>"aa".replaceAll("a","b")</code> → "bb"</td></tr>
+        <tr><td><code>split(sep)</code></td><td>Split into array</td><td><code>"a,b,c".split(",")</code> → ["a","b","c"]</td></tr>
+        <tr><td><code>toUpperCase()</code></td><td>Uppercase</td><td><code>"ab".toUpperCase()</code> → "AB"</td></tr>
+        <tr><td><code>toLowerCase()</code></td><td>Lowercase</td><td><code>"AB".toLowerCase()</code> → "ab"</td></tr>
+        <tr><td><code>trim()</code></td><td>Trim both ends</td><td><code>"  a  ".trim()</code> → "a"</td></tr>
+        <tr><td><code>padStart(n,c)</code></td><td>Pad start</td><td><code>"5".padStart(3,"0")</code> → "005"</td></tr>
+        <tr><td><code>padEnd(n,c)</code></td><td>Pad end</td><td><code>"5".padEnd(3,"0")</code> → "500"</td></tr>
+        <tr><td><code>repeat(n)</code></td><td>Repeat</td><td><code>"ab".repeat(3)</code> → "ababab"</td></tr>
+        <tr><td><code>match(re)</code></td><td>Regex match</td><td><code>"a1b2".match(/\d/g)</code> → ["1","2"]</td></tr>
+        <tr><td><code>concat(...)</code></td><td>Join strings</td><td><code>"a".concat("b","c")</code> → "abc"</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>📚 3. All Array Methods</h3>
+      <p><code>push, pop, shift, unshift, slice, splice, concat, join, reverse, sort, map, filter, reduce, forEach, find, findIndex, some, every, includes, flat, flatMap, fill</code></p>
+    </div>
+
+    <div class="card">
+      <h3>📚 4. Objects, Math, Date, JSON</h3>
+      <p><b>Object:</b> <code>keys, values, entries, assign, freeze, create, fromEntries</code></p>
+      <p><b>Math:</b> <code>abs, ceil, floor, round, max, min, pow, sqrt, random, sign, PI, E</code></p>
+      <p><b>Date:</b> <code>new Date(), getFullYear, getMonth, getTime, toISOString, toLocaleString</code></p>
+      <p><b>JSON:</b> <code>JSON.stringify(obj), JSON.parse(str)</code></p>
+    </div>
+
+    <div class="card">
+      <h3>📚 5. Async &amp; Modern</h3>
+      <pre><code>// Promises
+fetch("/api").then(r =&gt; r.json()).then(d =&gt; console.log(d));
+
+// Async/await
+async function load(){
+  const r = await fetch("/api");
+  const d = await r.json();
+  return d;
+}
+
+// Arrow + destructuring + spread
+const {name, age} = user;
+const merged = {...a, ...b};
+const [first, ...rest] = arr;</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>💰 Make Money With JavaScript</h3>
+      <ul>
+        <li><b>Freelance websites</b> — Upwork, Fiverr ($200–$5000/project)</li>
+        <li><b>Chrome extensions</b> — publish on Chrome Web Store</li>
+        <li><b>Telegram/Discord bots</b> — charge for premium features</li>
+        <li><b>Sell templates</b> — Gumroad, ThemeForest</li>
+        <li><b>Build SaaS</b> — Stripe + Vercel + Supabase, MRR income</li>
+        <li><b>Teach</b> — YouTube, Udemy, Skillshare</li>
+        <li><b>Bug bounties</b> — HackerOne, Bugcrowd</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⚡ Live JavaScript Runner</h3>
+      <div class="editor">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span>index.js</span><span>JavaScript</span></div>
+        <textarea id="jsCode" spellcheck="false">// Try me!
+const name = "LordvinCi";
+const nums = [1,2,3,4,5];
+console.log(`Hello ${name}!`);
+console.log("Doubled:", nums.map(n => n * 2));
+console.log("Sum:", nums.reduce((a,b) => a + b, 0));</textarea>
+        <div class="actions">
+          <button class="run" onclick="runJS()">▶ Run</button>
+          <button onclick="clearOut('jsOut')">Clear</button>
+        </div>
+        <div class="out" id="jsOut">// output will appear here</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="python">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>Python <span class="badge">Full Course</span></h2>
+    <p class="lead">From print() to AI — every method, every practical workflow.</p>
+
+    <div class="card">
+      <h3>📚 1. Basics</h3>
+      <pre><code>name = "LordvinCi"
+age = 25
+pi = 3.14
+is_dev = True
+nums = [1,2,3]          # list
+tup = (1,2)             # tuple (immutable)
+s = {1,2,3}             # set
+d = {"a":1, "b":2}      # dict
+
+print(f"Hi {name}, age {age}")</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 2. All String Methods</h3>
+      <table>
+        <tr><th>Method</th><th>Purpose</th></tr>
+        <tr><td><code>.upper() / .lower()</code></td><td>Case change</td></tr>
+        <tr><td><code>.title() / .capitalize()</code></td><td>Title case / first cap</td></tr>
+        <tr><td><code>.strip() / .lstrip() / .rstrip()</code></td><td>Trim whitespace</td></tr>
+        <tr><td><code>.split(sep)</code></td><td>Split into list</td></tr>
+        <tr><td><code>" ".join(list)</code></td><td>Join list</td></tr>
+        <tr><td><code>.replace(a,b)</code></td><td>Replace substring</td></tr>
+        <tr><td><code>.find(s) / .index(s)</code></td><td>Index (-1 vs error)</td></tr>
+        <tr><td><code>.count(s)</code></td><td>Count occurrences</td></tr>
+        <tr><td><code>.startswith(s) / .endswith(s)</code></td><td>Prefix/suffix check</td></tr>
+        <tr><td><code>.isdigit() / .isalpha() / .isalnum()</code></td><td>Type checks</td></tr>
+        <tr><td><code>.zfill(n)</code></td><td>Zero-pad</td></tr>
+        <tr><td><code>.center(w) / .ljust(w) / .rjust(w)</code></td><td>Justify</td></tr>
+        <tr><td><code>.swapcase()</code></td><td>Swap case</td></tr>
+        <tr><td><code>.partition(sep)</code></td><td>Split into 3</td></tr>
+        <tr><td><code>.splitlines()</code></td><td>Split lines</td></tr>
+        <tr><td><code>.format()</code></td><td>Old formatting</td></tr>
+        <tr><td><code>.encode()</code></td><td>To bytes</td></tr>
+        <tr><td><code>.casefold()</code></td><td>Aggressive lowercase</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>📚 3. Lists, Dicts, Sets</h3>
+      <p><b>List:</b> <code>append, extend, insert, remove, pop, clear, index, count, sort, reverse, copy</code></p>
+      <p><b>Dict:</b> <code>get, keys, values, items, update, pop, popitem, setdefault, fromkeys</code></p>
+      <p><b>Set:</b> <code>add, remove, discard, pop, union, intersection, difference, issubset</code></p>
+    </div>
+
+    <div class="card">
+      <h3>📚 4. Files, Loops, Functions</h3>
+      <pre><code>with open("data.txt","w") as f:
+    f.write("hello")
+
+for i in range(5): print(i)
+
+def greet(name, greeting="Hi"):
+    return f"{greeting}, {name}"
+
+square = lambda x: x*x
+nums = list(map(square, [1,2,3]))</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 5. Key Libraries</h3>
+      <ul>
+        <li><b>requests</b> — HTTP calls</li>
+        <li><b>beautifulsoup4</b> — web scraping</li>
+        <li><b>flask / fastapi</b> — web APIs</li>
+        <li><b>numpy / pandas</b> — data analysis</li>
+        <li><b>matplotlib / seaborn</b> — charts</li>
+        <li><b>scikit-learn / tensorflow</b> — ML/AI</li>
+        <li><b>python-telegram-bot / discord.py</b> — bots</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>💰 Make Money With Python</h3>
+      <ul>
+        <li><b>Automation scripts</b> — sell on Gumroad ($10–$200)</li>
+        <li><b>Web scraping services</b> — lead gen, price monitoring</li>
+        <li><b>Telegram/Discord bots</b> — subscriptions</li>
+        <li><b>Data analysis freelance</b> — Upwork, Toptal</li>
+        <li><b>AI apps</b> — wrap OpenAI, sell SaaS</li>
+        <li><b>Trading bots</b> — crypto/stock automation</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⚡ Live Python Runner</h3>
+      <p style="font-size:12.5px;color:var(--dim)">Runs via Pyodide (downloads ~6MB first time).</p>
+      <div class="editor">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span>main.py</span><span>Python 3</span></div>
+        <textarea id="pyCode" spellcheck="false">name = "LordvinCi"
+nums = [1,2,3,4,5]
+print(f"Hello {name}!")
+print("Doubled:", [n*2 for n in nums])
+print("Sum:", sum(nums))</textarea>
+        <div class="actions">
+          <button class="run" onclick="runPython()">▶ Run Python</button>
+          <button onclick="clearOut('pyOut')">Clear</button>
+        </div>
+        <div class="out" id="pyOut"># output will appear here</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="r">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>R Language <span class="badge">Full Course</span></h2>
+    <p class="lead">Statistics, data analysis, visualization.</p>
+
+    <div class="card">
+      <h3>📚 1. Basics &amp; Strings</h3>
+      <pre><code>name &lt;- "LordvinCi"
+nums &lt;- c(1,2,3,4,5)
+mean(nums)      # 3
+sum(nums)       # 15
+length(nums)    # 5
+
+# String functions
+nchar(name)                    # 10
+toupper(name)                  # LORDVINCI
+tolower("HELLO")               # hello
+substr(name, 1, 4)             # "Lord"
+paste("Hi", name)              # "Hi LordvinCi"
+paste0("Hi", name)             # "HiLordvinCi"
+strsplit("a,b,c", ",")         # list
+trimws("  x  ")                # "x"
+gsub("a","X","banana")         # "bXnXnX"
+sub("a","X","banana")          # "bXnana"
+grep("an", c("banana","apple"))# 1
+grepl("an", "banana")          # TRUE</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 2. stringr Package</h3>
+      <p><code>str_c, str_detect, str_extract, str_replace, str_replace_all, str_split, str_trim, str_wrap, str_pad, str_length, str_sub, str_to_upper, str_to_lower, str_to_title, str_count</code></p>
+    </div>
+
+    <div class="card">
+      <h3>📚 3. Data Structures</h3>
+      <p><b>Vector:</b> <code>c(), seq(), rep(), sort(), rev(), unique()</code></p>
+      <p><b>Data frame:</b> <code>data.frame(), rbind, cbind, merge, subset, head, tail, str, summary</code></p>
+      <p><b>List:</b> <code>list(), lapply, sapply, unlist</code></p>
+      <p><b>Stats:</b> <code>mean, median, sd, var, sum, min, max, quantile, cor, lm, glm, t.test</code></p>
+    </div>
+
+    <div class="card">
+      <h3>📚 4. Visualization &amp; Packages</h3>
+      <p><code>ggplot2, dplyr, tidyr, plotly, shiny, caret, randomForest</code></p>
+    </div>
+
+    <div class="card">
+      <h3>💰 Make Money With R</h3>
+      <ul>
+        <li><b>Data analyst</b> roles ($60k–$130k/year)</li>
+        <li><b>Biostatistics</b> — pharma, research</li>
+        <li><b>Financial modeling</b> — quant firms</li>
+        <li><b>Shiny dashboards</b> — sell as services</li>
+        <li><b>Academic consulting</b> — thesis analysis</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⚡ R Code Preview (simulated)</h3>
+      <div class="editor">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span>script.R</span><span>R</span></div>
+        <textarea id="rCode" spellcheck="false">name &lt;- "LordvinCi"
+nums &lt;- c(1,2,3,4,5)
+cat("Hello", name, "\n")
+cat("Doubled:", nums*2, "\n")
+cat("Sum:", sum(nums), "\n")</textarea>
+        <div class="actions">
+          <button class="run" onclick="runR()">▶ Run (simulate)</button>
+          <button onclick="clearOut('rOut')">Clear</button>
+        </div>
+        <div class="out" id="rOut"># output will appear here</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="termux">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>Termux <span class="badge">Full Guide</span></h2>
+    <p class="lead">Linux on Android — install, run, hack (ethically).</p>
+
+    <div class="card">
+      <h3>📱 1. Install Termux</h3>
+      <ol>
+        <li>Download <b>Termux</b> from <a class="link" href="https://f-droid.org/packages/com.termux/" target="_blank" rel="noopener">F-Droid</a> (Play Store version is outdated)</li>
+        <li>Open Termux — you'll see a <code>$</code> prompt</li>
+        <li>Run <code>termux-setup-storage</code> to allow file access</li>
+        <li>Update everything</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>📚 2. Essential Setup</h3>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div class="cmd">apt update &amp;&amp; apt upgrade -y</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">2</div><div class="cmd">pkg install python python2 git nano vim wget curl -y</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">3</div><div class="cmd">pkg install nodejs ruby php openssh -y</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">4</div><div class="cmd">pip install --upgrade pip</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">5</div><div class="cmd">termux-setup-storage</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📚 3. Basic Commands</h3>
+      <table>
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><code>pwd</code></td><td>Where am I</td></tr>
+        <tr><td><code>ls / ls -la</code></td><td>List files</td></tr>
+        <tr><td><code>cd dir / cd .. / cd ~</code></td><td>Change directory</td></tr>
+        <tr><td><code>mkdir name</code></td><td>Create folder</td></tr>
+        <tr><td><code>touch file</code></td><td>Create file</td></tr>
+        <tr><td><code>cat file</code></td><td>Show file</td></tr>
+        <tr><td><code>nano file</code></td><td>Edit (Ctrl+O save, Ctrl+X exit)</td></tr>
+        <tr><td><code>vim file</code></td><td>Edit (:wq save+exit)</td></tr>
+        <tr><td><code>cp a b / mv a b / rm file</code></td><td>Copy / move / delete</td></tr>
+        <tr><td><code>rm -rf dir</code></td><td>Force delete folder</td></tr>
+        <tr><td><code>clear</code></td><td>Clear screen</td></tr>
+        <tr><td><code>exit</code></td><td>Quit</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>📦 4. Packages</h3>
+      <table>
+        <tr><th>Package</th><th>Install</th><th>Run</th></tr>
+        <tr><td>Python 3</td><td><code>pkg install python</code></td><td><code>python</code></td></tr>
+        <tr><td>Python 2</td><td><code>pkg install python2</code></td><td><code>python2</code></td></tr>
+        <tr><td>Node.js</td><td><code>pkg install nodejs</code></td><td><code>node</code></td></tr>
+        <tr><td>Git</td><td><code>pkg install git</code></td><td><code>git</code></td></tr>
+        <tr><td>Nano</td><td><code>pkg install nano</code></td><td><code>nano file</code></td></tr>
+        <tr><td>Vim</td><td><code>pkg install vim</code></td><td><code>vim file</code></td></tr>
+        <tr><td>sl (train)</td><td><code>pkg install sl</code></td><td><code>sl</code></td></tr>
+        <tr><td>toilet</td><td><code>pkg install toilet</code></td><td><code>toilet Hello</code></td></tr>
+        <tr><td>figlet</td><td><code>pkg install figlet</code></td><td><code>figlet Hello</code></td></tr>
+        <tr><td>cmatrix</td><td><code>pkg install cmatrix</code></td><td><code>cmatrix</code></td></tr>
+        <tr><td>neofetch</td><td><code>pkg install neofetch</code></td><td><code>neofetch</code></td></tr>
+        <tr><td>calcurse</td><td><code>pkg install calcurse</code></td><td><code>calcurse</code></td></tr>
+        <tr><td>openssh</td><td><code>pkg install openssh</code></td><td><code>sshd</code></td></tr>
+        <tr><td>nmap</td><td><code>pkg install nmap</code></td><td><code>nmap target</code></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>🔧 5. Real Install-and-Run Example</h3>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div class="cmd">apt update</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">2</div><div class="cmd">apt upgrade -y</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">3</div><div class="cmd">pkg install python python2 git -y</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">4</div><div class="cmd">pip install ast</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">5</div><div class="cmd">pip install mechanize</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">6</div><div class="cmd">pip install requests beautifulsoup4</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">7</div><div class="cmd">git clone https://github.com/Tuhinshubhra/RED_HAWK</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">8</div><div class="cmd">cd RED_HAWK</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">9</div><div class="cmd">python3 rhawk.py</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+      </div>
+      <p style="color:var(--warn);font-size:12.5px;margin-top:10px">⚠️ Only use security tools on systems you own or have written permission to test.</p>
+    </div>
+
+    <div class="card">
+      <h3>🌐 6. Popular Git Clones</h3>
+      <table>
+        <tr><th>Tool</th><th>Clone command</th></tr>
+        <tr><td>RedHawk</td><td><code>git clone https://github.com/Tuhinshubhra/RED_HAWK</code></td></tr>
+        <tr><td>zphisher</td><td><code>git clone https://github.com/htr-tech/zphisher</code></td></tr>
+        <tr><td>Tool-X</td><td><code>git clone https://github.com/rajkumardusad/Tool-X</code></td></tr>
+        <tr><td>Termux-ohmyzsh</td><td><code>git clone https://github.com/Cabbagec/termux-ohmyzsh</code></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>💻 7. SSH into Termux from Laptop</h3>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div class="cmd">pkg install openssh</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">2</div><div class="cmd">passwd</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">3</div><div class="cmd">sshd</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">4</div><div class="cmd">ifconfig | grep inet</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">5</div><div class="cmd">ssh -p 8022 user@your-phone-ip</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>💰 Make Money With Termux</h3>
+      <ul>
+        <li><b>Server administration</b> — manage VPS on the go</li>
+        <li><b>Sell Termux tutorials</b> — YouTube, Gumroad</li>
+        <li><b>Automation scripts</b> — daily tasks as a service</li>
+        <li><b>Content creation</b> — Termux tutorials channel</li>
+        <li><b>Host a Telegram bot</b> — run 24/7 on old Android</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⚡ Termux Command Simulator</h3>
+      <div class="editor">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span>termux</span><span>simulator</span></div>
+        <textarea id="txCode" spellcheck="false">pkg install python
+git clone https://github.com/Tuhinshubhra/RED_HAWK
+ls
+cd RED_HAWK
+python3 rhawk.py</textarea>
+        <div class="actions">
+          <button class="run" onclick="runTermux()">▶ Simulate</button>
+          <button onclick="clearOut('txOut')">Clear</button>
+        </div>
+        <div class="out" id="txOut">$ </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="linux">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>Linux <span class="badge">Full Course</span></h2>
+    <p class="lead">The OS that runs the internet. Master the shell.</p>
+
+    <div class="card">
+      <h3>📚 1. Filesystem</h3>
+      <table>
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><code>ls / ls -la / ls -lh</code></td><td>List files</td></tr>
+        <tr><td><code>cd / cd .. / cd ~ / cd -</code></td><td>Navigate</td></tr>
+        <tr><td><code>pwd</code></td><td>Print working directory</td></tr>
+        <tr><td><code>mkdir -p a/b/c</code></td><td>Make nested dirs</td></tr>
+        <tr><td><code>rmdir dir</code></td><td>Remove empty dir</td></tr>
+        <tr><td><code>rm -rf dir</code></td><td>Force delete</td></tr>
+        <tr><td><code>cp -r src dst</code></td><td>Recursive copy</td></tr>
+        <tr><td><code>mv old new</code></td><td>Move/rename</td></tr>
+        <tr><td><code>touch file</code></td><td>Create empty</td></tr>
+        <tr><td><code>ln -s target link</code></td><td>Symlink</td></tr>
+        <tr><td><code>find /path -name "*.txt"</code></td><td>Search files</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>📚 2. Text Processing</h3>
+      <pre><code>cat file.txt                  # show
+less file.txt                 # page view (q to quit)
+head -n 20 file.txt           # first 20 lines
+tail -f log.txt               # live follow
+wc -l file.txt                # line count
+grep "error" log.txt          # search
+grep -ri "todo" .             # recursive case-insensitive
+sed 's/old/new/g' file.txt    # replace
+awk '{print $1, $3}' file.txt # columns 1,3
+cut -d',' -f2 file.csv        # column 2
+sort file.txt | uniq -c       # count uniques
+diff file1 file2              # compare</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 3. Permissions &amp; Ownership</h3>
+      <pre><code>chmod 755 script.sh     # rwxr-xr-x
+chmod +x script.sh      # add execute
+chmod -R 644 dir/       # recursive
+chown user:group file   # change owner
+chgrp group file        # change group
+umask 022               # default mask
+whoami                  # current user
+id                      # user id + groups
+sudo command            # as root</code></pre>
+      <p style="font-size:12.5px;color:var(--dim)">Permission numbers: 4=read, 2=write, 1=execute.</p>
+    </div>
+
+    <div class="card">
+      <h3>📚 4. Processes &amp; System</h3>
+      <table>
+        <tr><th>Command</th><th>Purpose</th></tr>
+        <tr><td><code>ps aux</code></td><td>All processes</td></tr>
+        <tr><td><code>top / htop</code></td><td>Live monitor</td></tr>
+        <tr><td><code>kill PID / kill -9 PID</code></td><td>Kill process</td></tr>
+        <tr><td><code>killall name</code></td><td>Kill by name</td></tr>
+        <tr><td><code>pkill pattern</code></td><td>Pattern kill</td></tr>
+        <tr><td><code>nohup cmd &amp;</code></td><td>Background job</td></tr>
+        <tr><td><code>df -h</code></td><td>Disk usage</td></tr>
+        <tr><td><code>du -sh dir</code></td><td>Dir size</td></tr>
+        <tr><td><code>free -h</code></td><td>Memory</td></tr>
+        <tr><td><code>uname -a</code></td><td>Kernel info</td></tr>
+        <tr><td><code>uptime</code></td><td>Uptime</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>📚 5. Networking</h3>
+      <pre><code>ping google.com
+curl -O https://example.com/file.zip
+wget https://example.com/file.zip
+ssh user@host
+scp file user@host:/path/
+rsync -av src/ dst/
+ip addr show
+netstat -tulpn
+ss -tulpn
+nslookup example.com
+dig example.com</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 6. Shell Power Features</h3>
+      <ul>
+        <li><code>cmd1 | cmd2</code> — pipe</li>
+        <li><code>cmd &gt; file</code> — redirect stdout</li>
+        <li><code>cmd 2&gt;&amp;1</code> — merge stderr</li>
+        <li><code>cmd1 &amp;&amp; cmd2</code> — run if success</li>
+        <li><code>cmd1 || cmd2</code> — run if fail</li>
+        <li><code>$(cmd)</code> — substitute output</li>
+        <li><code>Ctrl+R</code> — search history</li>
+        <li><code>!!</code> — last command</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>💰 Make Money With Linux</h3>
+      <ul>
+        <li><b>Sysadmin / DevOps</b> — $70k–$150k/year</li>
+        <li><b>Server setup services</b> — Fiverr gigs</li>
+        <li><b>VPS hosting reseller</b> — buy wholesale, sell retail</li>
+        <li><b>Docker/Kubernetes consulting</b> — enterprise rates</li>
+        <li><b>CI/CD pipeline setup</b> — GitHub Actions, GitLab CI</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⚡ Linux Command Simulator</h3>
+      <div class="editor">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span>bash</span><span>simulator</span></div>
+        <textarea id="lxCode" spellcheck="false">ls -la
+mkdir projects
+cd projects
+echo "hello" > file.txt
+cat file.txt
+grep hello file.txt
+ps aux | head -3</textarea>
+        <div class="actions">
+          <button class="run" onclick="runLinux()">▶ Simulate</button>
+          <button onclick="clearOut('lxOut')">Clear</button>
+        </div>
+        <div class="out" id="lxOut">$ </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="ubuntu">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>Ubuntu <span class="badge">Full Course</span></h2>
+    <p class="lead">The world's most popular Linux distro.</p>
+
+    <div class="card">
+      <h3>📚 1. System Info</h3>
+      <pre><code>lsb_release -a
+uname -a
+hostnamectl
+lscpu
+lsblk
+lsusb
+lspci
+free -h
+df -h
+top / htop</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 2. APT Package Manager</h3>
+      <pre><code>sudo apt update              # refresh repos
+sudo apt upgrade -y          # upgrade
+sudo apt full-upgrade        # full upgrade
+sudo apt install pkg         # install
+sudo apt remove pkg          # remove
+sudo apt purge pkg           # remove + config
+sudo apt autoremove          # clean deps
+sudo apt search term         # search
+apt show pkg                 # details
+apt list --installed         # list installed
+dpkg -i file.deb             # install local</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 3. Snap &amp; Flatpak</h3>
+      <pre><code># Snap
+snap install pkg
+snap list
+snap remove pkg
+snap refresh
+
+# Flatpak
+flatpak install flathub app.id
+flatpak list
+flatpak run app.id
+flatpak uninstall app.id</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 4. systemd Services</h3>
+      <pre><code>sudo systemctl start service
+sudo systemctl stop service
+sudo systemctl restart service
+sudo systemctl status service
+sudo systemctl enable service    # auto-start on boot
+sudo systemctl disable service
+systemctl list-units --type=service
+journalctl -u service -f         # live logs</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 5. Users &amp; Firewall</h3>
+      <pre><code># Users
+sudo adduser newuser
+sudo deluser newuser
+sudo usermod -aG sudo newuser
+sudo passwd user
+su - user
+
+# UFW firewall
+sudo ufw enable
+sudo ufw status
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw deny 3306</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 6. Complete Ubuntu Server Setup</h3>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div class="cmd">sudo apt update &amp;&amp; sudo apt upgrade -y</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">2</div><div class="cmd">sudo apt install -y build-essential git curl wget vim nano htop ufw fail2ban nginx</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">3</div><div class="cmd">sudo ufw allow OpenSSH</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">4</div><div class="cmd">sudo ufw allow 'Nginx Full'</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">5</div><div class="cmd">sudo ufw enable</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">6</div><div class="cmd">ssh-keygen -t ed25519 -C "you@email.com"</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">7</div><div class="cmd">ssh-copy-id user@server</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>💰 Make Money With Ubuntu</h3>
+      <ul>
+        <li><b>Deploy websites</b> for clients (LEMP stack)</li>
+        <li><b>Host SaaS</b> on VPS ($5/month → $1000s MRR)</li>
+        <li><b>Reseller hosting</b> — WHM/cPanel or RunCloud</li>
+        <li><b>Email server setup</b> — Postfix + Dovecot</li>
+        <li><b>VPN servers</b> — WireGuard, OpenVPN for clients</li>
+        <li><b>DevOps consulting</b> — Ansible, Docker, Kubernetes</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⚡ Ubuntu Command Simulator</h3>
+      <div class="editor">
+        <div class="bar"><div class="dots"><i></i><i></i><i></i></div><span>ubuntu</span><span>simulator</span></div>
+        <textarea id="ubCode" spellcheck="false">sudo apt update
+sudo apt install nginx -y
+sudo systemctl status nginx
+sudo ufw allow 'Nginx Full'
+lsb_release -a</textarea>
+        <div class="actions">
+          <button class="run" onclick="runUbuntu()">▶ Simulate</button>
+          <button onclick="clearOut('ubOut')">Clear</button>
+        </div>
+        <div class="out" id="ubOut">$ </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="bots">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>Bot Creation <span class="badge">Full Course</span></h2>
+    <p class="lead">Telegram, Discord, WhatsApp — build real bots that earn.</p>
+
+    <div class="card">
+      <h3>📚 1. Telegram Bot (Python)</h3>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div class="cmd">pip install python-telegram-bot</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">2</div><div class="cmd">Open Telegram → search @BotFather</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">3</div><div class="cmd">Send: /newbot → choose name → choose username ending in "bot"</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">4</div><div class="cmd">Copy the token BotFather gives you</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+        <div class="step"><div class="n">5</div><div class="cmd">Paste into code below, run it</div><button class="copy-s" onclick="copyCmd(this)">copy</button></div>
+      </div>
+      <pre><code>from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+
+TOKEN = "PASTE_TOKEN_HERE"
+
+async def start(update, ctx):
+    await update.message.reply_text("💀 Bot online! Type /help")
+
+async def help_cmd(update, ctx):
+    await update.message.reply_text("Commands: /start, /help")
+
+async def handle_text(update, ctx):
+    await update.message.reply_text(f"You said: {update.message.text}")
+
+app = Application.builder().token(TOKEN).build()
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("help", help_cmd))
+app.add_handler(MessageHandler(filters.TEXT &amp; ~filters.COMMAND, handle_text))
+app.run_polling()</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 2. Telegram Bot (Node.js)</h3>
+      <pre><code>const TelegramBot = require('node-telegram-bot-api');
+const bot = new TelegramBot('PASTE_TOKEN', { polling: true });
+
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(msg.chat.id, '💀 Bot online!');
+});
+
+bot.on('message', (msg) => {
+  if(msg.text &amp;&amp; !msg.text.startsWith('/')){
+    bot.sendMessage(msg.chat.id, `You said: ${msg.text}`);
+  }
+});</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 3. Discord Bot (discord.js)</h3>
+      <pre><code>const { Client, GatewayIntentBits } = require('discord.js');
+const client = new Client({ intents: [
+  GatewayIntentBits.Guilds,
+  GatewayIntentBits.GuildMessages,
+  GatewayIntentBits.MessageContent
+]});
+
+client.on('ready', () => console.log(`Logged in as ${client.user.tag}`));
+
+client.on('messageCreate', (msg) => {
+  if(msg.author.bot) return;
+  if(msg.content === '!ping') msg.reply('Pong!');
+});
+
+client.login('PASTE_TOKEN');</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 4. WhatsApp Bot (whatsapp-web.js)</h3>
+      <pre><code>const { Client, LocalAuth } = require('whatsapp-web.js');
+const qrcode = require('qrcode-terminal');
+
+const client = new Client({ authStrategy: new LocalAuth() });
+
+client.on('qr', qr => qrcode.generate(qr, { small: true }));
+client.on('ready', () => console.log('WhatsApp ready!'));
+
+client.on('message', async msg => {
+  if(msg.body === '!ping') msg.reply('Pong!');
+});
+
+client.initialize();</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>💰 Make Money With Bots</h3>
+      <ul>
+        <li><b>Telegram bot SaaS</b> — subscription for premium features</li>
+        <li><b>Crypto trading bots</b> — copy trading, signals</li>
+        <li><b>Discord community bots</b> — hosting services</li>
+        <li><b>WhatsApp Business bots</b> — for local stores</li>
+        <li><b>Bot templates</b> — sell on Gumroad, CodeCanyon</li>
+        <li><b>Custom bot development</b> — $200–$3000 per project</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="apis">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>APIs <span class="badge">Full Collection</span></h2>
+    <p class="lead">Public APIs with links — copy URLs and dive in.</p>
+
+    <div class="card">
+      <h3>📚 1. Free API Lists</h3>
+      <div class="api-row"><span class="name">Public APIs (1,400+)</span><span class="url">https://github.com/public-apis/public-apis</span><button class="cp" onclick="copyText(this,'https://github.com/public-apis/public-apis')">copy</button></div>
+      <div class="api-row"><span class="name">n0shake/Public-APIs</span><span class="url">https://github.com/n0shake/Public-APIs</span><button class="cp" onclick="copyText(this,'https://github.com/n0shake/Public-APIs')">copy</button></div>
+      <div class="api-row"><span class="name">RapidAPI</span><span class="url">https://rapidapi.com/hub</span><button class="cp" onclick="copyText(this,'https://rapidapi.com/hub')">copy</button></div>
+    </div>
+
+    <div class="card">
+      <h3>📚 2. Ready-to-Use APIs</h3>
+
+      <h4>🆓 No-key Random APIs</h4>
+      <div class="api-row"><span class="name">Random User</span><span class="url">https://randomuser.me/api/</span><button class="cp" onclick="copyText(this,'https://randomuser.me/api/')">copy</button></div>
+      <div class="api-row"><span class="name">Cat Facts</span><span class="url">https://catfact.ninja/fact</span><button class="cp" onclick="copyText(this,'https://catfact.ninja/fact')">copy</button></div>
+      <div class="api-row"><span class="name">Dog CEO</span><span class="url">https://dog.ceo/api/breeds/image/random</span><button class="cp" onclick="copyText(this,'https://dog.ceo/api/breeds/image/random')">copy</button></div>
+      <div class="api-row"><span class="name">JokeAPI</span><span class="url">https://v2.jokeapi.dev/joke/Any</span><button class="cp" onclick="copyText(this,'https://v2.jokeapi.dev/joke/Any')">copy</button></div>
+      <div class="api-row"><span class="name">Quotable</span><span class="url">https://api.quotable.io/random</span><button class="cp" onclick="copyText(this,'https://api.quotable.io/random')">copy</button></div>
+      <div class="api-row"><span class="name">IP Info</span><span class="url">https://ipapi.co/json/</span><button class="cp" onclick="copyText(this,'https://ipapi.co/json/')">copy</button></div>
+
+      <h4>🌤️ Weather</h4>
+      <div class="api-row"><span class="name">OpenWeatherMap</span><span class="url">https://api.openweathermap.org/data/2.5/weather?q=London&amp;appid=KEY</span><button class="cp" onclick="copyText(this,'https://api.openweathermap.org/data/2.5/weather?q=London&appid=KEY')">copy</button></div>
+
+      <h4>🤖 AI / ML</h4>
+      <div class="api-row"><span class="name">OpenAI</span><span class="url">https://api.openai.com/v1/chat/completions</span><button class="cp" onclick="copyText(this,'https://api.openai.com/v1/chat/completions')">copy</button></div>
+      <div class="api-row"><span class="name">Hugging Face</span><span class="url">https://api-inference.huggingface.co/models/MODEL</span><button class="cp" onclick="copyText(this,'https://api-inference.huggingface.co/models/MODEL')">copy</button></div>
+
+      <h4>💰 Finance</h4>
+      <div class="api-row"><span class="name">CoinGecko</span><span class="url">https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&amp;vs_currencies=usd</span><button class="cp" onclick="copyText(this,'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd')">copy</button></div>
+
+      <h4>📰 News</h4>
+      <div class="api-row"><span class="name">NewsAPI</span><span class="url">https://newsapi.org/v2/top-headlines?country=us&amp;apiKey=KEY</span><button class="cp" onclick="copyText(this,'https://newsapi.org/v2/top-headlines?country=us&apiKey=KEY')">copy</button></div>
+
+      <h4>🖼️ Images</h4>
+      <div class="api-row"><span class="name">Unsplash</span><span class="url">https://api.unsplash.com/photos/random?client_id=KEY</span><button class="cp" onclick="copyText(this,'https://api.unsplash.com/photos/random?client_id=KEY')">copy</button></div>
+
+      <h4>💳 Payments</h4>
+      <div class="api-row"><span class="name">Stripe</span><span class="url">https://api.stripe.com/v1/charges</span><button class="cp" onclick="copyText(this,'https://api.stripe.com/v1/charges')">copy</button></div>
+      <div class="api-row"><span class="name">Paystack</span><span class="url">https://api.paystack.co/transaction/initialize</span><button class="cp" onclick="copyText(this,'https://api.paystack.co/transaction/initialize')">copy</button></div>
+
+      <h4>🔎 Utilities</h4>
+      <div class="api-row"><span class="name">QR Server</span><span class="url">https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data=Hello</span><button class="cp" onclick="copyText(this,'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Hello')">copy</button></div>
+      <div class="api-row"><span class="name">GitHub API</span><span class="url">https://api.github.com/users/octocat</span><button class="cp" onclick="copyText(this,'https://api.github.com/users/octocat')">copy</button></div>
+      <div class="api-row"><span class="name">IPify</span><span class="url">https://api.ipify.org?format=json</span><button class="cp" onclick="copyText(this,'https://api.ipify.org?format=json')">copy</button></div>
+    </div>
+
+    <div class="card">
+      <h3>📚 3. How to Use an API</h3>
+      <pre><code>// JavaScript
+const res = await fetch("https://catfact.ninja/fact");
+const data = await res.json();
+console.log(data.fact);
+
+// Python
+import requests
+r = requests.get("https://catfact.ninja/fact")
+print(r.json()["fact"])</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>📚 4. API Security Rules</h3>
+      <ul>
+        <li>Never expose keys in frontend code</li>
+        <li>Store in <code>.env</code> — never commit</li>
+        <li>Proxy requests through your backend</li>
+        <li>Rotate keys regularly</li>
+        <li>Restrict by IP or domain when possible</li>
+        <li>Rate-limit your endpoints</li>
+        <li>Use HTTPS only</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>💰 Make Money With APIs</h3>
+      <ul>
+        <li><b>Sell API access</b> — wrap a service, charge monthly</li>
+        <li><b>API aggregator</b> — combine multiple into one</li>
+        <li><b>RapidAPI publishing</b> — earn per call</li>
+        <li><b>Build SaaS</b> — API-based, Stripe billing</li>
+        <li><b>Freelance integration</b> — $500–$5000 per project</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⚡ Live API Tester</h3>
+      <p style="font-size:12.5px;color:var(--dim)">Try any GET API URL — response shows below.</p>
+      <div class="term-row">
+        <span>GET</span>
+        <input id="apiUrl" value="https://catfact.ninja/fact" placeholder="https://api.example.com/...">
+        <button class="btn-fill" onclick="testApi()">Send</button>
+      </div>
+      <div class="out" id="apiOut" style="margin-top:10px">// response appears here</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="terminal">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>Live Terminal <span class="badge">Sandbox</span></h2>
+    <p class="lead">Type any command. Try: help, ls, whoami, date, matrix</p>
+    <div id="term-box">
+      <div class="line sys">LordvinCiTech Terminal v3 — type "help" to begin</div>
+    </div>
+    <div class="term-row">
+      <span>$</span>
+      <input id="termInput" placeholder="type a command..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-outline" onclick="termExec('help')">help</button>
+      <button class="btn-outline" onclick="termExec('ls')">ls</button>
+      <button class="btn-outline" onclick="termExec('whoami')">whoami</button>
+      <button class="btn-outline" onclick="termExec('date')">date</button>
+      <button class="btn-outline" onclick="termExec('matrix')">matrix</button>
+      <button class="btn-outline" onclick="termExec('clear')">clear</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="support">
+  <div class="section-wrap">
+    <h2><span class="dot"></span>Support</h2>
+    <p class="lead">Tap any button to reach out instantly.</p>
+    <div class="card">
+      <h3>📞 Contact</h3>
+      <div class="contact-grid">
+        <a class="contact-btn" href="https://wa.me/2348143281120?text=Hello%20LordvinCiTech%2C%20I%20need%20help" target="_blank" rel="noopener">
+          <span class="ci wa"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.4.4-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 .9-1 2.3 0 1.4 1 2.7 1.2 2.9.1.2 2 3.1 5 4.3.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4zM12 21.8c-1.7 0-3.4-.5-4.9-1.4l-3.4.9.9-3.3c-1-1.5-1.5-3.3-1.5-5.1C3 7 7 3 12 3s9 4 9 9-4 9.8-9 9.8z"/></svg></span>
+          <span><b>WhatsApp</b><br><small style="color:var(--dim)">+234 814 328 1120</small></span>
+        </a>
+        <a class="contact-btn" href="tel:+2348143281120">
+          <span class="ci tel"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg></span>
+          <span><b>Call</b><br><small style="color:var(--dim)">08143281120</small></span>
+        </a>
+        <a class="contact-btn" href="mailto:lordvinci90@gmail.com?subject=LordvinCiTech%20Support">
+          <span class="ci mail"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></span>
+          <span><b>Email</b><br><small style="color:var(--dim)">lordvinci90@gmail.com</small></span>
+        </a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>❓ FAQ</h3>
+      <p><b>Q: Do I need an account?</b><br>A: No — but signup unlocks the PIN gate + captcha chain.</p>
+      <p><b>Q: Is the terminal real?</b><br>A: Sandbox with curated command set.</p>
+      <p><b>Q: How do I install the app?</b><br>A: Tap the floating ⬇ button (Chrome, Edge, Samsung Internet).</p>
+      <p><b>Q: Why did the calculator appear?</b><br>A: It's your 2FA — re-enter your 4-digit signup PIN.</p>
+      <p><b>Q: I failed captcha 3 times — what happens?</b><br>A: The whole flow restarts from signup.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <div class="sk">💀</div>
+      <b>LordvinCiTech High</b>
+      <p>The complete underground coding academy. Every language, every tool, every money-making angle — taught from zero.</p>
+      <div class="socials">
+        <a href="https://facebook.com" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1 0-1.7.2-2.1.4-.5.2-.9.4-1.3.8-.4.4-.6.8-.8 1.3-.2.4-.3 1-.4 2.1-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c0 1.1.2 1.7.4 2.1.2.5.4.9.8 1.3.4.4.8.6 1.3.8.4.2 1 .3 2.1.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1 0 1.7-.2 2.1-.4.5-.2.9-.4 1.3-.8.4-.4.6-.8.8-1.3.2-.4.3-1 .4-2.1.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c0-1.1-.2-1.7-.4-2.1-.2-.5-.4-.9-.8-1.3-.4-.4-.8-.6-1.3-.8-.4-.2-1-.3-2.1-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.1a4.9 4.9 0 100 9.8 4.9 4.9 0 000-9.8zm0 8.1a3.2 3.2 0 110-6.4 3.2 3.2 0 010 6.4zm6.2-8.3a1.1 1.1 0 11-2.3 0 1.1 1.1 0 012.3 0z"/></svg>
+        </a>
+        <a href="https://twitter.com" target="_blank" rel="noopener" title="Twitter/X" aria-label="Twitter X">
+          <svg viewBox="0 0 24 24"><path d="M18.2 2H21l-7 8 8.3 12H16l-5.4-7.1L4.4 22H1.6l7.5-8.6L1 2h6.5l4.9 6.5L18.2 2zm-1 18h1.5L7 3.8H5.4L17.2 20z"/></svg>
+        </a>
+        <a href="https://discord.com" target="_blank" rel="noopener" title="Discord" aria-label="Discord">
+          <svg viewBox="0 0 24 24"><path d="M20.3 4.4A19 19 0 0015.8 3l-.2.4c1.7.4 2.5.9 3.3 1.5a17 17 0 00-6-1 17 17 0 00-6 1c.8-.6 1.6-1.1 3.3-1.5L10 3a19 19 0 00-4.5 1.4C2.7 8.7 2 12.8 2.3 16.8a19 19 0 005.8 3l1.2-1.6c-.7-.3-1.4-.6-2-1.1l.5-.4a13.7 13.7 0 0011.6 0l.5.4c-.6.5-1.3.8-2 1.1l1.2 1.6a19 19 0 005.8-3c.4-4.6-.6-8.7-2.6-12.4zM8.9 14.4c-1.1 0-2-1-2-2.3 0-1.3.9-2.3 2-2.3s2 1 2 2.3c0 1.3-.9 2.3-2 2.3zm6.2 0c-1.1 0-2-1-2-2.3 0-1.3.9-2.3 2-2.3s2 1 2 2.3c0 1.3-.9 2.3-2 2.3z"/></svg>
+        </a>
+        <a href="https://github.com" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 .5A11.5 11.5 0 00.5 12a11.5 11.5 0 007.9 10.9c.6.1.8-.3.8-.6v-2.1c-3.2.7-3.9-1.5-3.9-1.5-.5-1.4-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.4 11.4 0 016 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0023.5 12 11.5 11.5 0 0012 .5z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h4>Learn</h4>
+      <a onclick="showSection('javascript')">JavaScript</a>
+      <a onclick="showSection('python')">Python</a>
+      <a onclick="showSection('r')">R Language</a>
+      <a onclick="showSection('termux')">Termux</a>
+      <a onclick="showSection('linux')">Linux</a>
+      <a onclick="showSection('ubuntu')">Ubuntu</a>
+    </div>
+    <div class="foot-col">
+      <h4>Build</h4>
+      <a onclick="showSection('bots')">Bot Creation</a>
+      <a onclick="showSection('apis')">APIs</a>
+      <a onclick="showSection('terminal')">Live Terminal</a>
+      <a onclick="showSection('support')">Support</a>
+    </div>
+    <div class="foot-col">
+      <h4>Contact</h4>
+      <a href="https://wa.me/2348143281120?text=Hello%20LordvinCiTech" target="_blank" rel="noopener">WhatsApp Chat</a>
+      <a href="tel:+2348143281120">📞 08143281120</a>
+      <a href="mailto:lordvinci90@gmail.com">📧 lordvinci90@gmail.com</a>
+    </div>
+  </div>
+
+  <div class="foot-news">
+    <div class="news">
+      <p><b>Get new lessons by email</b>Join the newsletter — new tutorials weekly.</p>
+      <input id="newsEmail" type="email" placeholder="your@email.com">
+      <button class="btn-fill" onclick="subscribe()">Subscribe</button>
+    </div>
+  </div>
+
+  <div class="foot-bottom">
+    © 2026 <b>LordvinCiTech High</b> — By Lordvincidev™. All rights reserved.
+    <div class="flex">
+      <a onclick="showSection('support')">Privacy</a>
+      <a onclick="showSection('support')">Terms</a>
+      <a href="mailto:lordvinci90@gmail.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<button id="installBtn" title="Install App" onclick="promptInstall()" aria-label="Install App">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.55l3.76-3.76 1.41 1.41L12 16.38l-5.17-5.18 1.41-1.41L12 13.55V3zM5 19h14v2H5z"/></svg>
+</button>
+
+<div id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal">
+    <div class="shards" id="shards"></div>
+    <button class="close" onclick="closeModal()" aria-label="Close">✕</button>
+    <h2 id="modalTitle">Login</h2>
+    <p class="sub" id="modalSub">Welcome back, legend.</p>
+
+    <div id="loginForm">
+      <div class="field"><label for="loginUser">Username or Email</label><input id="loginUser" placeholder="lordvinci" autocomplete="username"></div>
+      <div class="field"><label>4-digit PIN</label>
+        <div class="pin-row">
+          <input maxlength="1" inputmode="numeric" id="lp1" autocomplete="off">
+          <input maxlength="1" inputmode="numeric" id="lp2" autocomplete="off">
+          <input maxlength="1" inputmode="numeric" id="lp3" autocomplete="off">
+          <input maxlength="1" inputmode="numeric" id="lp4" autocomplete="off">
+        </div>
+      </div>
+      <button class="btn" onclick="doLogin()">Login →</button>
+      <div class="switch">No account? <a onclick="openModal('signup')">Sign up</a></div>
+    </div>
+
+    <div id="signupForm" class="hidden">
+      <div class="field"><label for="suUser">Username</label><input id="suUser" placeholder="lordvinci" autocomplete="username"></div>
+      <div class="field"><label for="suEmail">Email</label><input id="suEmail" type="email" placeholder="you@email.com" autocomplete="email"></div>
+      <div class="field">
+        <label>Create 4-digit PIN (used for 2FA + login)</label>
+        <div class="pin-row">
+          <input maxlength="1" inputmode="numeric" id="pin1" autocomplete="off">
+          <input maxlength="1" inputmode="numeric" id="pin2" autocomplete="off">
+          <input maxlength="1" inputmode="numeric" id="pin3" autocomplete="off">
+          <input maxlength="1" inputmode="numeric" id="pin4" autocomplete="off">
+        </div>
+      </div>
+      <button class="btn" onclick="doSignup()">Create Account →</button>
+      <div class="switch">Have an account? <a onclick="openModal('login')">Login</a></div>
+    </div>
+  </div>
+</div>
+
+<div id="calcGate">
+  <div class="calc">
+    <div class="scr">
+      <div class="status"><span>🔒 2FA LOCK</span><span id="calcStatus">REQUIRED</span></div>
+      <div class="out" id="calcOut">_</div>
+    </div>
+    <div class="keys">
+      <button onclick="calcInput('1')">1</button><button onclick="calcInput('2')">2</button><button onclick="calcInput('3')">3</button>
+      <button onclick="calcInput('4')">4</button><button onclick="calcInput('5')">5</button><button onclick="calcInput('6')">6</button>
+      <button onclick="calcInput('7')">7</button><button onclick="calcInput('8')">8</button><button onclick="calcInput('9')">9</button>
+      <button class="op" onclick="calcInput('C')">C</button><button onclick="calcInput('0')">0</button><button class="op" onclick="calcInput('⌫')">⌫</button>
+      <button class="eq" onclick="calcVerify()">VERIFY PIN</button>
+    </div>
+    <div class="note">Re-enter your 4-digit signup PIN.<br><b>Set at signup →</b></div>
+  </div>
+</div>
+
+<div id="captcha">
+  <div class="cap">
+    <h2>🤖 Verify You Are Human</h2>
+    <p class="sub">Retype the code below exactly. 3 attempts allowed.</p>
+    <div class="box">
+      <div class="code" id="capCode">--------</div>
+      <div class="refresh" onclick="genCaptcha()">↻ New code</div>
+    </div>
+    <input id="capInput" placeholder="type the code" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <button class="btn" onclick="capVerify()">Verify →</button>
+    <div class="tries">Attempts left: <b id="capTries">3</b></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ============ CONNECTION ============ */
+function checkConn(){
+  const off = document.getElementById('offline');
+  if(!navigator.onLine){ off.classList.add('show'); document.body.classList.add('locked'); }
+  else { off.classList.remove('show'); document.body.classList.remove('locked'); }
+}
+window.addEventListener('online', checkConn);
+window.addEventListener('offline', checkConn);
+checkConn();
+
+/* ============ FLAMES ============ */
+const flameBox = document.getElementById('flames');
+function spawnFlame(){
+  const f = document.createElement('div');
+  f.className = 'flame';
+  f.style.left = Math.random()*100 + '%';
+  f.style.animationDuration = (2 + Math.random()*2) + 's';
+  const size = (8 + Math.random()*10) + 'px';
+  f.style.width = size; f.style.height = size;
+  f.style.background = Math.random() > 0.5
+    ? 'radial-gradient(circle,#fff 0%,var(--accent) 30%,transparent 70%)'
+    : 'radial-gradient(circle,#fff 0%,var(--accent2) 30%,transparent 70%)';
+  flameBox.appendChild(f);
+  setTimeout(() => f.remove(), 4000);
+}
+setInterval(spawnFlame, 220);
+for(let i=0;i<6;i++) setTimeout(spawnFlame, i*300);
+
+/* ============ SIDEBAR ============ */
+function toggleSidebar(e){
+  if(e) e.stopPropagation();
+  const sb = document.getElementById('sidebar');
+  const bd = document.getElementById('backdrop');
+  const mb = document.getElementById('menuBtn');
+  const open = sb.classList.toggle('open');
+  bd.classList.toggle('show', open);
+  mb.classList.toggle('open', open);
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('show');
+  document.getElementById('menuBtn').classList.remove('open');
+}
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.sec === id));
+  closeSidebar();
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+}
+
+/* ============ MODAL ============ */
+const modal = document.getElementById('modal');
+const overlay = document.getElementById('modalOverlay');
+const shardsEl = document.getElementById('shards');
+
+function makeShards(){
+  shardsEl.innerHTML = '';
+  for(let i=0;i<10;i++){
+    const s = document.createElement('div');
+    s.className = 'shard';
+    const size = 30 + Math.random()*70;
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = (Math.random()*85) + '%';
+    s.style.top = (Math.random()*85) + '%';
+    s.style.setProperty('--tx', (Math.random()*260-130) + 'px');
+    s.style.setProperty('--ty', (Math.random()*260-130) + 'px');
+    s.style.setProperty('--rot', (Math.random()*540-270) + 'deg');
+    shardsEl.appendChild(s);
+  }
+}
+
+function openModal(mode){
+  makeShards();
+  overlay.classList.add('show');
+  document.body.classList.add('locked');
+  if(mode === 'login'){
+    document.getElementById('modalTitle').textContent = 'Login';
+    document.getElementById('modalSub').textContent = 'Welcome back, legend.';
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('signupForm').classList.add('hidden');
+  } else {
+    document.getElementById('modalTitle').textContent = 'Create Account';
+    document.getElementById('modalSub').textContent = 'Set a 4-digit PIN — no password.';
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('signupForm').classList.remove('hidden');
+  }
+  modal.classList.remove('shatter-out');
+  modal.classList.add('shatter-in');
+}
+
+function closeModal(){
+  modal.classList.remove('shatter-in');
+  modal.classList.add('shatter-out');
+  makeShards();
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    document.body.classList.remove('locked');
+    modal.classList.remove('shatter-out');
+  }, 420);
+}
+
+/* ============ AUTH ============ */
+let currentUser = null;
+
+function refreshAuth(){
+  const saved = JSON.parse(localStorage.getItem('lvt_account') || 'null');
+  const box = document.getElementById('navAuth');
+  if(saved){
+    box.innerHTML = '<div class="user-pill">💀 ' + escapeHtml(saved.user) + ' <button onclick="logout()" title="Logout" aria-label="Logout">✕</button></div>';
+  } else {
+    box.innerHTML = '<button onclick="openModal(\'login\')">Login</button>' +
+                    '<button class="primary" onclick="openModal(\'signup\')">Sign Up</button>';
+  }
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function logout(){
+  localStorage.removeItem('lvt_account');
+  currentUser = null;
+  refreshAuth();
+  toast('Logged out');
+}
+
+function doSignup(){
+  const user = document.getElementById('suUser').value.trim();
+  const email = document.getElementById('suEmail').value.trim();
+  const pin = ['pin1','pin2','pin3','pin4'].map(id => document.getElementById(id).value).join('');
+  if(!user || !email || pin.length !== 4 || !/^\d{4}$/.test(pin)){
+    toast('Fill all fields & a 4-digit numeric PIN'); return;
+  }
+  const account = { user, email, pin };
+  localStorage.setItem('lvt_account', JSON.stringify(account));
+  currentUser = account;
+  refreshAuth();
+  toast('Account created! Setting up 2FA...');
+  closeModal();
+  setTimeout(() => showCalcGate(), 700);
+}
+
+function doLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  const pin = ['lp1','lp2','lp3','lp4'].map(id => document.getElementById(id).value).join('');
+  const saved = JSON.parse(localStorage.getItem('lvt_account') || 'null');
+  if(!saved){ toast('No account. Sign up first.'); return; }
+  if((u === saved.user || u === saved.email) && pin === saved.pin){
+    currentUser = saved;
+    refreshAuth();
+    toast('Welcome back, ' + saved.user + '!');
+    closeModal();
+  } else {
+    toast('Invalid credentials');
+  }
+}
+
+/* PIN auto-advance */
+[['pin1','pin2','pin3','pin4'],['lp1','lp2','lp3','lp4']].forEach(group => {
+  group.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(/\D/g,'');
+      if(el.value && i < group.length - 1){
+        const next = document.getElementById(group[i+1]);
+        if(next) next.focus();
+      }
+    });
+    el.addEventListener('keydown', (e) => {
+      if(e.key === 'Backspace' && !el.value && i > 0){
+        const prev = document.getElementById(group[i-1]);
+        if(prev){ prev.focus(); }
+      }
+    });
+  });
+});
+
+/* ============ CALCULATOR 2FA ============ */
+let calcBuf = '';
+function showCalcGate(){
+  const saved = JSON.parse(localStorage.getItem('lvt_account') || 'null');
+  if(!saved){ toast('Sign up first'); return; }
+  calcBuf = '';
+  document.getElementById('calcOut').textContent = '_';
+  document.getElementById('calcStatus').textContent = 'REQUIRED';
+  document.getElementById('calcGate').classList.add('show');
+  document.body.classList.add('locked');
+}
+function calcInput(v){
+  if(v === 'C') calcBuf = '';
+  else if(v === '⌫') calcBuf = calcBuf.slice(0,-1);
+  else if(calcBuf.length < 4 && /^\d$/.test(v)) calcBuf += v;
+  document.getElementById('calcOut').textContent = calcBuf || '_';
+}
+function calcVerify(){
+  const saved = JSON.parse(localStorage.getItem('lvt_account') || 'null');
+  if(!saved) return;
+  if(calcBuf === saved.pin){
+    document.getElementById('calcStatus').textContent = '✓ GRANTED';
+    document.getElementById('calcOut').textContent = '2FA OK';
+    toast('PIN correct — human check next');
+    setTimeout(() => {
+      document.getElementById('calcGate').classList.remove('show');
+      showCaptcha();
+    }, 900);
+  } else {
+    document.getElementById('calcStatus').textContent = '✗ DENIED';
+    document.getElementById('calcOut').textContent = 'WRONG';
+    calcBuf = '';
+    setTimeout(() => { document.getElementById('calcOut').textContent = '_'; }, 800);
+    toast('Wrong PIN — try again');
+  }
+}
+
+/* ============ CAPTCHA ============ */
+let capCode = '';
+let capAttempts = 3;
+
+function genCaptcha(){
+  const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  capCode = '';
+  for(let i=0;i<10;i++) capCode += chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('capCode').textContent = capCode;
+  document.getElementById('capInput').value = '';
+}
+function showCaptcha(){
+  genCaptcha();
+  capAttempts = 3;
+  document.getElementById('capTries').textContent = capAttempts;
+  document.getElementById('captcha').classList.add('show');
+  document.body.classList.add('locked');
+  setTimeout(() => document.getElementById('capInput').focus(), 300);
+}
+function capVerify(){
+  const input = document.getElementById('capInput').value.trim();
+  if(input === capCode){
+    document.getElementById('captcha').classList.remove('show');
+    document.body.classList.remove('locked');
+    toast('Verified 💀 Welcome to LordvinCiTech High');
+    showSection('home');
+  } else {
+    capAttempts--;
+    document.getElementById('capTries').textContent = capAttempts;
+    if(capAttempts <= 0){
+      localStorage.removeItem('lvt_account');
+      currentUser = null;
+      refreshAuth();
+      document.getElementById('captcha').classList.remove('show');
+      document.body.classList.remove('locked');
+      toast('3 failed attempts — restarting signup');
+      setTimeout(() => openModal('signup'), 500);
+    } else {
+      toast('Wrong code — ' + capAttempts + ' tries left');
+      genCaptcha();
+    }
+  }
+}
+
+/* ============ CODE RUNNERS ============ */
+function clearOut(id){ document.getElementById(id).textContent = ''; }
+
+function runJS(){
+  const out = document.getElementById('jsOut');
+  out.textContent = '';
+  const code = document.getElementById('jsCode').value;
+  const orig = console.log;
+  const origErr = console.error;
+  console.log = (...args) => {
+    out.textContent += args.map(a => {
+      try { return typeof a === 'object' && a !== null ? JSON.stringify(a) : String(a); }
+      catch(e){ return String(a); }
+    }).join(' ') + '\n';
+    orig.apply(console, args);
+  };
+  console.error = (...args) => {
+    out.textContent += 'ERR: ' + args.map(String).join(' ') + '\n';
+    origErr.apply(console, args);
+  };
+  try { new Function(code)(); }
+  catch(e){ out.textContent += 'Error: ' + e.message + '\n'; }
+  console.log = orig;
+  console.error = origErr;
+}
+
+function runPython(){
+  const out = document.getElementById('pyOut');
+  out.textContent = 'Loading Pyodide... (first run downloads ~6MB)\n';
+  if(window.pyodideLoaded){
+    execPy();
+    return;
+  }
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js';
+  script.onload = async () => {
+    try{
+      const pyodide = await loadPyodide();
+      window.pyodide = pyodide;
+      window.pyodideLoaded = true;
+      execPy();
+    } catch(e){ out.textContent = 'Failed to load Pyodide: ' + e.message; }
+  };
+  script.onerror = () => { out.textContent = 'Offline — cannot load Pyodide.'; };
+  document.head.appendChild(script);
+
+  async function execPy(){
+    const out = document.getElementById('pyOut');
+    out.textContent = '';
+    const code = document.getElementById('pyCode').value;
+    try{
+      window.pyodide.setStdout({ batched: (s) => { out.textContent += s + '\n'; } });
+      window.pyodide.setStderr({ batched: (s) => { out.textContent += 'ERR: ' + s + '\n'; } });
+      await window.pyodide.runPythonAsync(code);
+    } catch(e){ out.textContent += 'Error: ' + e.message; }
+  }
+}
+
+function runR(){
+  const code = document.getElementById('rCode').value;
+  const out = document.getElementById('rOut');
+  let result = '# simulated R output\n';
+  let vars = {};
+  code.split('\n').forEach(l => {
+    const t = l.trim();
+    if(!t || t.startsWith('#')) return;
+    // variable assignment: name <- value
+    const assignMatch = t.match(/^(\w+)\s*<-\s*(.+)$/);
+    if(assignMatch){
+      const [, name, valRaw] = assignMatch;
+      // strip inline comment
+      const val = valRaw.split('#')[0].trim();
+      if(val.startsWith('c(')){
+        try{
+          const arr = val.slice(2, -1).split(',').map(x => eval(x.trim()));
+          vars[name] = arr;
+        } catch(e){ vars[name] = 0; }
+      } else if(val.startsWith('"') || val.startsWith("'")){
+        vars[name] = val.slice(1, -1);
+      } else {
+        try { vars[name] = eval(val); } catch(e){ vars[name] = 0; }
+      }
+      return;
+    }
+    // cat() calls
+    if(t.startsWith('cat(')){
+      const inner = t.slice(4).replace(/\)\s*$/, '');
+      const parts = inner.split(',').map(p => p.trim());
+      let lineOut = '';
+      parts.forEach(p => {
+        if(p === '"\\n"' || p === "'\\n'") lineOut += '\n';
+        else if(p.startsWith('"') || p.startsWith("'")) lineOut += p.slice(1, -1);
+        else if(vars[p] !== undefined){
+          lineOut += Array.isArray(vars[p]) ? vars[p].join(' ') : String(vars[p]);
+        }
+        else if(p.startsWith('sum(') && p.endsWith(')')){
+          const v = p.slice(4, -1);
+          if(Array.isArray(vars[v])) lineOut += vars[v].reduce((a,b) => a+b, 0);
+        }
+        else if(p.includes('*2')){
+          const v = p.replace('*2','').trim();
+          if(Array.isArray(vars[v])) lineOut += vars[v].map(n => n*2).join(' ');
+        }
+        else lineOut += p;
+      });
+      result += lineOut + '\n';
+    }
+  });
+  out.textContent = result;
+}
+
+function runTermux(){
+  const code = document.getElementById('txCode').value;
+  const out = document.getElementById('txOut');
+  out.textContent = '';
+  code.split('\n').forEach(l => {
+    const t = l.trim();
+    if(!t) return;
+    out.textContent += '$ ' + t + '\n';
+    if(t.startsWith('pkg install')) out.textContent += 'Reading package lists... Done\nSetting up ' + t.split(' ').pop() + '...\n';
+    else if(t.startsWith('git clone')) out.textContent += "Cloning into '" + t.split('/').pop() + "'...\nremote: Enumerating objects... done.\n";
+    else if(t === 'ls') out.textContent += 'RED_HAWK/  storage/  notes.txt\n';
+    else if(t.startsWith('cd')) {}
+    else if(t.startsWith('python')) out.textContent += '[+] Tool started — follow on-screen prompts\n';
+    else out.textContent += '(ok)\n';
+  });
+}
+
+function runLinux(){
+  const code = document.getElementById('lxCode').value;
+  const out = document.getElementById('lxOut');
+  out.textContent = '';
+  code.split('\n').forEach(l => {
+    const t = l.trim();
+    if(!t) return;
+    out.textContent += '$ ' + t + '\n';
+    if(t === 'ls -la') out.textContent += 'total 24\ndrwxr-xr-x 3 user user 4096 .\ndrwxr-xr-x 5 user user 4096 ..\n-rw-r--r-- 1 user user  220 file.txt\n';
+    else if(t.startsWith('mkdir') || t.startsWith('cd') || t.includes('> file.txt')) {}
+    else if(t.startsWith('cat')) out.textContent += 'hello\n';
+    else if(t.startsWith('grep')) out.textContent += 'hello\n';
+    else if(t.startsWith('ps aux')) out.textContent += 'USER  PID  %CPU %MEM  COMMAND\nroot    1   0.0  0.1  /sbin/init\nuser  1234  0.5  1.2  bash\n';
+  });
+}
+
+function runUbuntu(){
+  const code = document.getElementById('ubCode').value;
+  const out = document.getElementById('ubOut');
+  out.textContent = '';
+  code.split('\n').forEach(l => {
+    const t = l.trim();
+    if(!t) return;
+    out.textContent += '$ ' + t + '\n';
+    if(t.includes('apt update')) out.textContent += 'Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease\nReading package lists... Done\n';
+    else if(t.includes('apt install')) out.textContent += 'Reading package lists... Done\nSetting up nginx...\n';
+    else if(t.includes('systemctl status')) out.textContent += '● nginx.service - A high performance web server\n   Active: active (running)\n';
+    else if(t.includes('ufw allow')) out.textContent += 'Rule added\n';
+    else if(t.includes('lsb_release')) out.textContent += 'Distributor ID: Ubuntu\nDescription:    Ubuntu 22.04 LTS\nRelease:        22.04\nCodename:       jammy\n';
+  });
+}
+
+/* ============ TERMINAL ============ */
+const term = document.getElementById('term-box');
+const termIn = document.getElementById('termInput');
+
+function termPrint(text, cls){
+  const d = document.createElement('div');
+  d.className = 'line ' + (cls || '');
+  d.textContent = text;
+  term.appendChild(d);
+  term.scrollTop = term.scrollHeight;
+}
+
+function termExec(cmd){
+  if(!cmd) return;
+  termPrint('$ ' + cmd, 'prompt');
+  const parts = cmd.trim().split(/\s+/);
+  const c = parts[0];
+  const args = parts.slice(1);
+  switch(c){
+    case 'help':
+      termPrint('Commands: help, about, date, whoami, echo, ls, pwd, uname, calc, matrix, clear, quit', 'sys'); break;
+    case 'about':
+      termPrint('LordvinCiTech Terminal v3 — sandbox'); break;
+    case 'date':
+      termPrint(new Date().toString()); break;
+    case 'whoami':
+      termPrint('lordvinci@lordvincitech'); break;
+    case 'echo':
+      termPrint(args.join(' ')); break;
+    case 'ls':
+      termPrint('home/  docs/  projects/  secrets.txt  README.md'); break;
+    case 'pwd':
+      termPrint('/home/lordvinci'); break;
+    case 'uname':
+      termPrint('LordvinCiTech 3.0 (sandbox)'); break;
+    case 'calc':
+      termPrint('Use the 2FA calculator from Home.', 'sys'); break;
+    case 'matrix':
+      termPrint('Wake up, Neo...', 'sys');
+      termPrint('01001000 01100101 01101100 01101100 01101111'); break;
+    case 'clear':
+      term.innerHTML = ''; break;
+    case 'quit':
+    case 'exit':
+      termPrint('Goodbye 💀', 'sys'); break;
+    default:
+      termPrint('command not found: ' + c, 'err');
+  }
+}
+termIn.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){
+    const v = termIn.value.trim();
+    if(v){ termExec(v); termIn.value = ''; }
+  }
+});
+termIn.addEventListener('focus', () => {
+  setTimeout(() => { term.scrollTop = term.scrollHeight; }, 300);
+});
+
+/* ============ COPY ============ */
+async function copyToClipboard(text){
+  try {
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch(e){ return false; }
+}
+function copyText(btn, text){
+  copyToClipboard(text).then(ok => {
+    if(ok){
+      const old = btn.textContent;
+      btn.textContent = '✓ copied';
+      setTimeout(() => btn.textContent = old || 'copy', 1200);
+    } else {
+      toast('Copy failed — long-press to copy manually');
+    }
+  });
+}
+function copyCmd(btn){
+  const cmdEl = btn.parentElement.querySelector('.cmd');
+  if(!cmdEl) return;
+  copyToClipboard(cmdEl.textContent).then(ok => {
+    if(ok){
+      btn.textContent = '✓';
+      setTimeout(() => btn.textContent = 'copy', 1200);
+    } else {
+      toast('Copy failed');
+    }
+  });
+}
+
+/* ============ API TESTER ============ */
+async function testApi(){
+  const url = document.getElementById('apiUrl').value.trim();
+  const out = document.getElementById('apiOut');
+  if(!url){ out.textContent = 'Enter a URL.'; return; }
+  out.textContent = 'Loading...';
+  try{
+    const r = await fetch(url);
+    const d = await r.json();
+    out.textContent = JSON.stringify(d, null, 2).slice(0, 2000);
+  } catch(e){
+    out.textContent = 'Error: ' + e.message + '\n(Some APIs block CORS from browsers.)';
+  }
+}
+
+/* ============ SUBSCRIBE ============ */
+function subscribe(){
+  const email = document.getElementById('newsEmail').value.trim();
+  if(!email || !email.includes('@')){ toast('Enter a valid email'); return; }
+  toast('Subscribed ✓ (demo only)');
+  document.getElementById('newsEmail').value = '';
+}
+
+/* ============ PWA ============ */
+let deferredPrompt = null;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.classList.add('show');
+  console.log('[PWA] beforeinstallprompt fired');
+});
+
+window.addEventListener('appinstalled', () => {
+  installBtn.classList.remove('show');
+  deferredPrompt = null;
+  toast('App installed 💀');
+});
+
+if (window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true) {
+  document.body.classList.add('pwa-mode');
+}
+
+function promptInstall(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choice) => {
+      if (choice.outcome === 'accepted') toast('Installing...');
+      deferredPrompt = null;
+      installBtn.classList.remove('show');
+    }).catch(()=>{});
+  } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    toast('Tap Share → "Add to Home Screen"');
+  } else if (/Android/i.test(navigator.userAgent)) {
+    toast('Tap ⋮ menu → "Install app" or "Add to Home screen"');
+  } else {
+    toast('Open browser menu → "Install LordvinCiTech High"');
+  }
+}
+
+setTimeout(() => {
+  if (!installBtn.classList.contains('show')) {
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth > 900) {
+      installBtn.classList.add('show');
+      installBtn.title = 'Install App';
+    }
+  }
+}, 3000);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .then(reg => console.log('[SW] registered:', reg.scope))
+      .catch(err => console.warn('[SW] registration failed:', err));
+  });
+}
+
+/* ============ TOAST ============ */
+let toastTimer;
+function toast(msg){
+  let t = document.querySelector('.toast');
+  if(!t){ t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ============ INIT ============ */
+refreshAuth();
+// Deep-link support: open section from hash
+if(location.hash){
+  const id = location.hash.slice(1);
+  if(document.getElementById(id) && document.getElementById(id).classList.contains('section')){
+    showSection(id);
+  }
+}
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape'){
+    if(overlay.classList.contains('show')) closeModal();
+    if(document.getElementById('sidebar').classList.contains('open')) closeSidebar();
+  }
+});
+</script>
+</body>
+</html>
